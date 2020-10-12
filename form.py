@@ -12,7 +12,8 @@ class RegistrationForm(FlaskForm):
     Length(min=4, max=25, 
     message="Password must be between 4 and 25 characters!")])
 
-    confirm_password = PasswordField('confirm_password_label', validators=[InputRequired(message="Password required"), 
+    confirm_password = PasswordField('confirm_password_label',
+    validators=[InputRequired(message="Password required"), 
     EqualTo('password', message = "Passwords must match")])
 
     submit_button = SubmitField('Register') 
