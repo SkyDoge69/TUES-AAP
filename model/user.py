@@ -44,8 +44,20 @@ class User():
             raise ApplicationError(
                     "User with id {} not found".format(user_id), 404)
         return User(*user)
- 
 
+    @staticmethod
+    def find_by_name(name):
+        result = None
+        with SQLite() as db:
+            result = db.execute(
+                    "SELECT name, password, id FROM user WHERE name = ?",
+                    (name,))
+        user = result.fetchone()
+        if user is None:
+            raise ApplicationError(
+                    "User with name {} not found".format(name), 404)
+        return User(*user)
+ 
     @staticmethod
     def all():
         with SQLite() as db:
