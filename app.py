@@ -15,10 +15,11 @@ def index():
         password = register_form.password.data
 
         # have to check if username already in use
+        does_exist = User.find_by_name(username)
+        if does_exist != None:
+            return "Someone has taken this username!"
+
         user = User(username, password)
-        print(user.name)
-        print(user.password)
-        print(user.id)
         user.save()
         return render_template("choice.html", form = register_form)
     return render_template("index.html", form = register_form)

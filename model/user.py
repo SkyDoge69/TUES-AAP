@@ -54,8 +54,7 @@ class User():
                     (name,))
         user = result.fetchone()
         if user is None:
-            raise ApplicationError(
-                    "User with name {} not found".format(name), 404)
+            return None
         return User(*user)
  
     @staticmethod
