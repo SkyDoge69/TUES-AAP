@@ -9,7 +9,7 @@ app.secret_key = 'shushumushu'
 def index():
     register_form = RegistrationForm()
     if register_form.validate_on_submit():
-        return 'Nice one'
+        return render_template("choice.html", form = register_form)
     return render_template("index.html", form = register_form)
 
 if __name__ == "__main__":
