@@ -8,7 +8,11 @@ app.secret_key = 'shushumushu'
 
 
 @app.route("/", methods=["GET", "POST"])
-def index():
+def home():
+    return render_template("home.html")
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
     register_form = RegistrationForm()
     if register_form.validate_on_submit():
         username = register_form.username.data
@@ -22,7 +26,7 @@ def index():
         user = User(username, password)
         user.save()
         return render_template("choice.html", form = register_form)
-    return render_template("index.html", form = register_form)
+    return render_template("registration.html", form = register_form)
 
 @app.route("/users", methods=["GET"])
 def list_users():
