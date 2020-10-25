@@ -1,79 +1,61 @@
-body{
-	background-color: #444444;
-	font-family: sans-serif;
+body {
+	font-family: poppins;
 }
 
-.slider{
-	max-width: 700px;
-	border:10px solid  #29a8e2;
-	margin:80px auto;
-	position: relative;
-	overflow: hidden;
+header .carousel-inner .item {
+	height: 100vh;
 }
 
-.slider .left-slide,.slider .right-slide{
-  position: absolute;
-  height: 40px;
-  width: 40px;
-  background-color: #444444;
-  border-radius: 50%;
-  color:#ffffff;
-  font-size: 20px;
-  top:50%;
-  cursor: pointer;
-  margin-top: -20px;
-  text-align: center;
-  line-height: 40px;
-  
-}
-.slider .left-slide:hover,.slider .right-slide:hover{
- box-shadow: 0px 0px 10px black;
- background-color: #29a8e2;
+.navbar-inverse {
+	background-color: transparent;
+	border-color: transparent;
 }
 
-.slider .left-slide{
-	left: 30px;
-}
-.slider .right-slide{
-	right: 30px;
-}
-.slider .slider-items .item img{
-	max-width: 100%;
-	display: block;
-	animation:zoom 1s ease;
+.navbar-inverse .navbar-brand {
+	color: #fff;
+	font-size: 40px;
+	padding: 40px 15px;
+	font-weight: 900;
 }
 
-@keyframes zoom{
-	0%{transform: scale(2);opacity: 0}
-	50%{transform: scale(2);}
-	100%{transform: scale(1);opacity:1}
-}
-.slider .slider-items .item{
-	display: none;
-	position: relative;
-}
-.slider .slider-items .item .caption{
-position: absolute;
-width: 100%;
-height: 60px;
-bottom: 0px;
-left: 0px;
-background-color: rgba(0,0,0,.5);
-line-height: 60px;
-text-align: center;
-color: #ffffff;
-font-size: 30px;
-
+.nav.navbar-nav.navbar-right {
+	margin: 25px 0; 
 }
 
-.slider .slider-items .item.active{
-	display: block;
+.navbar-inverse .navbar-nav > li > a {
+	color: #fff;
+	text-transform: uppercase;
 }
 
+.banner {
+	-webkit-background-size: cover;
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	height: 100vh;
+}
 
+.carousel-caption {
+	padding-bottom: 250px;
+	font-family: poppins;
+}
 
+.carousel-caption h2 {
+	font-size: 70px;
+	text-transform: uppercase;
+	font-weight: bold;
+}
 
+.carousel-caption h2 span {
+	color: #edb;
+}
 
-
-
-
+.carousel-caption a {
+	background: #edbb00;
+	padding: 15px 35px;
+	display: inline-block;
+	margin-top: 15px;
+	color: #fff;
+	text-transform: uppercase;
+	border-radius: 25px;
+}
