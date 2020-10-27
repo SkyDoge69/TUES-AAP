@@ -18,11 +18,7 @@ def register():
         username = register_form.username.data
         password = register_form.password.data
 
-        # have to check if username already in use
-        does_exist = User.find_by_name(username)
-        if does_exist != None:
-            return "Someone has taken this username!"
-
+        print(register_form.username.data)
         user = User(username, password, "Hasn't chosen")
         user.save()
         return render_template("choice.html", form = register_form)
