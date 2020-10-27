@@ -4,6 +4,8 @@
       <title>Choice</title>
       <link href="../css/bootstrap.min.css" rel="stylesheet">
       <link rel="stylesheet" href="../static/styles/choice.css"/>
+      <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/choice.css') }}"> -->
 </head>
 <body>
 
@@ -46,7 +48,7 @@
              <div class="carousel-caption">
                <h2><span>Acting</span></h2>
                <h3>Creative and dedicated</h3>
-               <p><a href="#">Choose</a></p>
+               <p><a href="#" onclick="alert('You chose acting');">Choose</a></p>
              </div>
            </div>
            <div class="item">
@@ -54,7 +56,7 @@
              <div class="carousel-caption">
                <h2><span>Photography</span></h2>
                <h3>Patient visionary</h3>
-               <p><a href="#">Choose</a></p>
+               <p><a href="#" onclick="alert('You chose photography');">Choose</a></p>
             </div>
            </div>
            <div class="item">
@@ -62,7 +64,7 @@
              <div class="carousel-caption">
                <h2><span>Model</span></h2>
                <h3>Beautiful and damned</h3>
-               <p><a href="#">Choose</a></p>
+               <p><a href="#" onclick="alert('You chose modeling');">Choose</a></p>
               </div>
             </div>
           </div>
@@ -82,5 +84,7 @@
 
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
    <script src="../js/bootstrap.min.js"></script>
+
+   
 </body>
 </html>

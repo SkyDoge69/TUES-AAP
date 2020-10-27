@@ -23,10 +23,14 @@ def register():
         if does_exist != None:
             return "Someone has taken this username!"
 
-        user = User(username, password)
+        user = User(username, password, "Hasn't chosen")
         user.save()
         return render_template("choice.html", form = register_form)
     return render_template("registration.html", form = register_form)
+
+@app.route("/choice", methods=["GET", "POST"])
+def choice():
+    return render_template("choice.html")
 
 @app.route("/users", methods=["GET"])
 def list_users():
