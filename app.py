@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, redirect, url_for
+from flask import Flask, render_template, jsonify, redirect, url_for, flash
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 
 from form import *
@@ -37,9 +37,14 @@ def login():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
-        return "Logged in, hopefully!"
-
+        return redirect(url_for('choice'))
     return render_template("login.html", form = login_form)
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    logout_user()
+    flash('You have successfully logged yourself out.')
+    return redirect(url_for('home'))
 
 @app.route("/choice", methods=["GET", "POST"])
 def choice():
