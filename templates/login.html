@@ -1,0 +1,25 @@
+{% from 'form_macro.html' import displayField %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Login</title>
+    </head>
+    <body>
+        <h2>Login!</h2>
+
+        <form action="{{ url_for('login') }}", method="POST">
+          
+            {{ displayField(form.username, 'Username', autocomplete="off", autofocus=true) }}
+            {{ displayField(form.password, 'Password') }}
+
+            <div>
+            {{ form.submit_button }}
+            </div>
+
+            {{ form.csrf_token }}
+        
+        </form>
+    </body>
+</html>
