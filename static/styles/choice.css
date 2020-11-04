@@ -59,3 +59,48 @@ header .carousel-inner .item {
 	text-transform: uppercase;
 	border-radius: 25px;
 }
+
+.carousel-control.right {
+	background-image: none;
+}
+
+.carousel-control.left {
+	background-image: none;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+	.carousel-caption {
+		padding-bottom: 350px;
+	}
+
+	.carousel-caption h2 {
+		font-size: 50px;
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.navbar-inverse .navbar-brand {
+		font-size: 30px;
+		padding: 20px 15px;
+	}
+
+	.navbar-collapse {
+		background: rgba(0, 0, 0, 0.5);
+	}
+
+	.carousel-caption {
+		padding-bottom: 120px;
+	}
+
+	.carousel-caption h2 {
+		font-size: 25px;
+	}
+
+	.carousel-caption h3 {
+		font-size: 18px;
+	}
+
+	.carousel-caption a {
+		padding: 10px 25px;
+	}
+}
