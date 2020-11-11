@@ -47,7 +47,7 @@
              <div class="carousel-caption">
                <h2><span>Acting</span></h2>
                <h3>Creative and dedicated</h3>
-               <p><a href="#" onclick="alert('You chose acting');">Choose</a></p>
+               <p><a href="#" onclick="choseActing()">Choose</a></p>
              </div>
            </div>
            <div class="item">
@@ -55,7 +55,7 @@
              <div class="carousel-caption">
                <h2><span>Photography</span></h2>
                <h3>Patient visionary</h3>
-               <p><a href="#" onclick="alert('You chose photography');">Choose</a></p>
+               <p><a href="#" onclick="chosePhotography()">Choose</a></p>
             </div>
            </div>
            <div class="item">
@@ -63,7 +63,7 @@
              <div class="carousel-caption">
                <h2><span>Model</span></h2>
                <h3>Beautiful and damned</h3>
-               <p><a href="#" onclick="alert('You chose modeling');">Choose</a></p>
+               <p><a href="#" onclick="choseModeling()">Choose</a></p>
               </div>
             </div>
           </div>
@@ -80,6 +80,21 @@
          </a>
        </div>
    </header>
+
+   <script>
+     function choseActing() {
+      location.href = "http://127.0.0.1:5000/ask";
+     }
+
+     function chosePhotography() {
+      location.href = "http://127.0.0.1:5000/ask";
+     }
+
+     function choseModeling() {
+      location.href = "http://127.0.0.1:5000/ask";
+     }
+
+   </script>
 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>

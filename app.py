@@ -19,6 +19,10 @@ def load_user(user_id):
 def home():
     return render_template("home.html")
 
+@app.route("/ask", methods=["GET", "POST"])
+def ask():
+    return render_template("ask.html")
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     register_form = RegistrationForm()
@@ -29,7 +33,7 @@ def register():
         print(register_form.username.data)
         user = User(username, password, "Hasn't chosen")
         user.save()
-        return redirect(url_for('login'))
+        return redirect(url_for('choice'))
     return render_template("registration.html", form = register_form)
 
 @app.route("/login", methods=["GET", "POST"])
@@ -37,7 +41,7 @@ def login():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
-        return redirect(url_for('choice'))
+        return redirect(url_for('home'))
     return render_template("login.html", form = login_form)
 
 @app.route('/logout', methods=['GET'])
