@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, jsonify, redirect, url_for, flash, json, request
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 
 from form import *
@@ -19,10 +19,6 @@ def load_user(user_id):
 def home():
     return render_template("home.html")
 
-@app.route("/ask", methods=["GET", "POST"])
-def ask():
-    return render_template("ask.html")
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     register_form = RegistrationForm()
@@ -41,7 +37,7 @@ def login():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
-        return redirect(url_for('home'))
+        return render_template("ask.html")
     return render_template("login.html", form = login_form)
 
 @app.route('/logout', methods=['GET'])
@@ -54,11 +50,18 @@ def logout():
 def choice():
     return render_template("choice.html")
 
+@app.route("/ask", methods=["POST"])
+def ask():
+    data = request.form['data']
+    user = User.get_last_registered()
+    user.update_choice(data, user.password)
+    return redirect(url_for('login'))
+
 @app.route("/users", methods=["GET"])
 def list_users():
     result = []
     for user in User.all():
-        result.append(user.to_viewable())
+        result.append(user.to_dict())
     return jsonify(result), 201
 
 if __name__ == "__main__":

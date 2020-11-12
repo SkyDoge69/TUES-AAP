@@ -47,7 +47,7 @@
              <div class="carousel-caption">
                <h2><span>Acting</span></h2>
                <h3>Creative and dedicated</h3>
-               <p><a href="#" onclick="choseActing()">Choose</a></p>
+               <p><a href="#" onclick="choseActing()" value="acting">Choose</a></form></p>
              </div>
            </div>
            <div class="item">
@@ -83,15 +83,21 @@
 
    <script>
      function choseActing() {
-      location.href = "http://127.0.0.1:5000/ask";
+      $.post( "/ask", {
+        data: "Acting" 
+      });
      }
 
      function chosePhotography() {
-      location.href = "http://127.0.0.1:5000/ask";
+      $.post( "/ask", {
+        data: "Photography" 
+      });
      }
 
      function choseModeling() {
-      location.href = "http://127.0.0.1:5000/ask";
+      $.post( "/ask", {
+        data: "Model" 
+      });
      }
 
    </script>

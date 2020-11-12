@@ -57,6 +57,28 @@ class User():
         if user is None:
             return None
         return User(*user)
+
+    @staticmethod
+    def update_choice(choice, name):
+        result = None
+        with SQLite() as db:
+            result = db.execute("UPDATE user SET choice = ? WHERE name = ?",
+                    (choice, name))
+        if result.rowcount == 0:
+            raise ApplicationError("No user present", 404)
+
+    @staticmethod
+    def get_last_registered():
+        result = None
+        with SQLite() as db:
+            result = db.execute(
+                    "SELECT * FROM user ORDER BY id DESC LIMIT 1",
+                    )
+        user = result.fetchone()
+        if user is None:
+            return None
+        return User(*user)
+    
  
     @staticmethod
     def all():
