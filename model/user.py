@@ -1,7 +1,8 @@
 from database import SQLite
 from errors import ApplicationError
+from flask_login import UserMixin
 
-class User():
+class User(UserMixin):
  
     def __init__(self, name, password, choice, rating, user_id=None):
         self.id = user_id

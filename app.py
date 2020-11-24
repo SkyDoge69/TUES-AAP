@@ -1,5 +1,7 @@
 from flask import Flask, render_template, jsonify, redirect, url_for, flash, json, request
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
+from flask_socketio import SocketIO
+
 
 from form import *
 from model.user import User
@@ -9,6 +11,7 @@ app = Flask(__name__)
 app.secret_key = 'shushumushu'
 login_manager = LoginManager()
 login_manager.init_app(app)
+socketio = SocketIO(app)
 
 
 @login_manager.user_loader
@@ -37,7 +40,9 @@ def login():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
-        return render_template("ask.html")
+        user_object = User.find_by_name(login_form.username.data)
+        login_user(user_object)
+        return render_template("ask.html", username = current_user.name)
     return render_template("login.html", form = login_form)
 
 @app.route('/logout', methods=['GET'])
@@ -64,5 +69,9 @@ def list_users():
         result.append(user.to_dict())
     return jsonify(result), 201
 
+# @socketio.on('match')
+# def match(data):
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app, debug=True)
