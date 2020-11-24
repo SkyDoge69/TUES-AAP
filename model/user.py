@@ -3,11 +3,12 @@ from errors import ApplicationError
 
 class User():
  
-    def __init__(self, name, password, choice, user_id=None):
+    def __init__(self, name, password, choice, rating, user_id=None):
         self.id = user_id
         self.name = name
         self.password = password
         self.choice = choice
+        self.rating = rating
  
     def to_dict(self):
         user_data = self.__dict__
@@ -38,7 +39,7 @@ class User():
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT name, password, choice, id FROM user WHERE id = ?",
+                    "SELECT name, password, choice, rating, id FROM user WHERE id = ?",
                     (user_id,))
         user = result.fetchone()
         if user is None:
@@ -51,7 +52,7 @@ class User():
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT name, password, choice, id FROM user WHERE name = ?",
+                    "SELECT name, password, choice, rating, id FROM user WHERE name = ?",
                     (name,))
         user = result.fetchone()
         if user is None:
@@ -84,15 +85,15 @@ class User():
     def all():
         with SQLite() as db:
             result = db.execute(
-                    "SELECT name, password, choice, id FROM user").fetchall()
+                    "SELECT name, password, choice, rating, id FROM user").fetchall()
             return [User(*row) for row in result]
  
     def __get_save_query(self):
         query = "{} INTO user {} VALUES {}"
         if self.id == None:
-            args = (self.name, self.password, self.choice)
-            query = query.format("INSERT", "(name, password, choice)", args)
+            args = (self.name, self.password, self.choice, self.rating)
+            query = query.format("INSERT", "(name, password, choice, rating)", args)
         else:
-            args = (self.id, self.name, self.password, self.choice)
-            query = query.format("REPLACE", "(id, name, password, choice)", args)
+            args = (self.id, self.name, self.password, self.choice, self.rating)
+            query = query.format("REPLACE", "(id, name, password, choice, rating)", args)
         return query

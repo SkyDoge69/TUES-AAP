@@ -27,7 +27,7 @@ def register():
         password = register_form.password.data
 
         print(register_form.username.data)
-        user = User(username, password, "Hasn't chosen")
+        user = User(username, password, "Hasn't chosen", 0)
         user.save()
         return redirect(url_for('choice'))
     return render_template("registration.html", form = register_form)
@@ -50,7 +50,7 @@ def logout():
 def choice():
     return render_template("choice.html")
 
-@app.route("/ask", methods=["POST"])
+@app.route("/ask", methods=["GET", "POST"])
 def ask():
     data = request.form['data']
     user = User.get_last_registered()
