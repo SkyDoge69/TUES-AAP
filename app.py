@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, redirect, url_for, flash, json, request
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, send, emit
 
 
 from form import *
@@ -9,10 +9,10 @@ import json
 
 app = Flask(__name__)
 app.secret_key = 'shushumushu'
-login_manager = LoginManager()
-login_manager.init_app(app)
 socketio = SocketIO(app)
 
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -42,7 +42,7 @@ def login():
     if login_form.validate_on_submit():
         user_object = User.find_by_name(login_form.username.data)
         login_user(user_object)
-        return render_template("ask.html", username = current_user.name)
+        return render_template("ask.html", username = current_user.name, rating = current_user.rating)
     return render_template("login.html", form = login_form)
 
 @app.route('/logout', methods=['GET'])
@@ -69,9 +69,18 @@ def list_users():
         result.append(user.to_dict())
     return jsonify(result), 201
 
-# @socketio.on('match')
-# def match(data):
+@socketio.on('message')
+def message(data):
+    print(f"\n\n{ data }\n\n")
+    send(data)
 
+@socketio.on('match')
+def match(data):
+    print("we are here")
+    chosenOne = User.find_closest_rating(data['choice'], data['rating'])
+    print("name" + chosenOne.name)
+    print("choice" + chosenOne.choice)
+    print("rating" + chosenOne.rating)
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)

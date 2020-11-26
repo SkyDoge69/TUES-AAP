@@ -61,6 +61,18 @@ class User(UserMixin):
         return User(*user)
 
     @staticmethod
+    def find_closest_rating(choice, rating):
+        result = None
+        with SQLite() as db:
+            result = db.execute(
+                    "SELECT * FROM user WHERE choice = ? AND ORDER BY ABS(? - rating) LIMIT 1",
+                    (choice, rating))
+        user = result.fetchone()
+        if user is None:
+            return None
+        return User(*user)
+
+    @staticmethod
     def update_choice(choice, name):
         result = None
         with SQLite() as db:
