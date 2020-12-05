@@ -81,6 +81,7 @@ def match(data):
     print("name" + chosenOne.name)
     print("choice" + chosenOne.choice)
     print("rating" + chosenOne.rating)
+    #windows subsystem test
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
