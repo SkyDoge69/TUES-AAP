@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#acting').onclick = () => {
         console.log('chose acting');
         socket.emit('match', {
-            'choice': "acting",
+            'choice': "Acting",
             'rating': rating
         });  
     }

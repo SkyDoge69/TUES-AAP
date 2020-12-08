@@ -5,11 +5,11 @@ from flask_login import UserMixin
 class User(UserMixin):
  
     def __init__(self, name, password, choice, rating, user_id=None):
-        self.id = user_id
         self.name = name
         self.password = password
         self.choice = choice
         self.rating = rating
+        self.id = user_id
  
     def to_dict(self):
         user_data = self.__dict__
@@ -62,14 +62,15 @@ class User(UserMixin):
 
     @staticmethod
     def find_closest_rating(choice, rating):
+        print(choice)
+        print(rating)
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT * FROM user WHERE choice = ? AND ORDER BY ABS(? - rating) LIMIT 1",
+                    "SELECT * FROM user WHERE choice = ? ORDER BY ABS(? - rating) LIMIT 1",
                     (choice, rating))
         user = result.fetchone()
-        if user is None:
-            return None
+        print("this is it {}".format(user))
         return User(*user)
 
     @staticmethod
@@ -107,6 +108,6 @@ class User(UserMixin):
             args = (self.name, self.password, self.choice, self.rating)
             query = query.format("INSERT", "(name, password, choice, rating)", args)
         else:
-            args = (self.id, self.name, self.password, self.choice, self.rating)
-            query = query.format("REPLACE", "(id, name, password, choice, rating)", args)
+            args = (self.name, self.password, self.choice, self.rating, self.id)
+            query = query.format("REPLACE", "(name, password, choice, rating, id)", args)
         return query

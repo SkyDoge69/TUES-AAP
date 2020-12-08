@@ -30,7 +30,7 @@ def register():
         password = register_form.password.data
 
         print(register_form.username.data)
-        user = User(username, password, "Hasn't chosen", 0)
+        user = User(username, password, "Hasn't chosen", 5)
         user.save()
         return redirect(url_for('choice'))
     return render_template("registration.html", form = register_form)
@@ -78,10 +78,10 @@ def message(data):
 def match(data):
     print("we are here")
     chosenOne = User.find_closest_rating(data['choice'], data['rating'])
-    print("name" + chosenOne.name)
-    print("choice" + chosenOne.choice)
-    print("rating" + chosenOne.rating)
-    #windows subsystem test
+    print("Name: {}".format(chosenOne.name))
+    print("Choice: {}".format(chosenOne.choice))
+    print("Rating: {}".format(chosenOne.rating))
+    print("Name: {}".format(chosenOne.id))
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
