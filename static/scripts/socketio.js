@@ -16,12 +16,18 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`Message recieved: ${data}`);
     });
 
+    socket.on('test', data => {
+        console.log(`Message recieved: ${data}`);
+    });
+
     document.querySelector('#acting').onclick = () => {
         console.log('chose acting');
         socket.emit('match', {
             'choice': "Acting",
             'rating': rating
-        });  
+        });
+        // window.location.href = "http://127.0.0.1:5000/chat";  
+        
     }
 
   console.log(username);

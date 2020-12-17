@@ -4,12 +4,13 @@ from flask_login import UserMixin
 
 class User(UserMixin):
  
-    def __init__(self, name, password, choice, rating, user_id=None):
+    def __init__(self, name, password, choice, rating, room_id, user_id=None):
         self.id = user_id
         self.name = name
         self.password = password
         self.choice = choice
         self.rating = rating
+        self.room_id = room_id
  
     def to_dict(self):
         user_data = self.__dict__
@@ -40,7 +41,7 @@ class User(UserMixin):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT name, password, choice, rating, id FROM user WHERE id = ?",
+                    "SELECT name, password, choice, rating, room_id, id FROM user WHERE id = ?",
                     (user_id,))
         user = result.fetchone()
         if user is None:
@@ -53,7 +54,7 @@ class User(UserMixin):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT name, password, choice, rating, id FROM user WHERE name = ?",
+                    "SELECT name, password, choice, rating, room_id, id FROM user WHERE name = ?",
                     (name,))
         user = result.fetchone()
         if user is None:
@@ -99,15 +100,15 @@ class User(UserMixin):
     def all():
         with SQLite() as db:
             result = db.execute(
-                    "SELECT name, password, choice, rating, id FROM user").fetchall()
+                    "SELECT name, password, choice, rating, room_id, id FROM user").fetchall()
             return [User(*row) for row in result]
  
     def __get_save_query(self):
         query = "{} INTO user {} VALUES {}"
         if self.id == None:
-            args = (self.name, self.password, self.choice, self.rating)
-            query = query.format("INSERT", "(name, password, choice, rating)", args)
+            args = (self.name, self.password, self.choice, self.rating, self.room_id)
+            query = query.format("INSERT", "(name, password, choice, rating, room_id)", args)
         else:
-            args = (self.id, self.name, self.password, self.choice, self.rating)
-            query = query.format("REPLACE", "(id, name, password, choice, rating)", args)
+            args = (self.id, self.name, self.password, self.choice, self.rating, self.room_id)
+            query = query.format("REPLACE", "(id, name, password, choice, rating, room_id)", args)
         return query

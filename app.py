@@ -2,10 +2,10 @@ from flask import Flask, render_template, jsonify, redirect, url_for, flash, jso
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from flask_socketio import SocketIO, send, emit
 
-
 from form import *
 from model.user import User
 import json
+import uuid
 
 app = Flask(__name__)
 app.secret_key = 'shushumushu'
@@ -28,9 +28,8 @@ def register():
     if register_form.validate_on_submit():
         username = register_form.username.data
         password = register_form.password.data
-
-        print(register_form.username.data)
-        user = User(username, password, "Hasn't chosen", 5)
+        sid = str(uuid.uuid1())
+        user = User(username, password, "Hasn't chosen", 5, sid)
         user.save()
         return redirect(url_for('choice'))
     return render_template("registration.html", form = register_form)
@@ -62,6 +61,10 @@ def ask():
     user.update_choice(data, user.password)
     return redirect(url_for('login'))
 
+@app.route("/chat", methods=['GET', 'POST'])
+def chat():
+    return render_template("chat.html", username=current_user.name)
+
 @app.route("/users", methods=["GET"])
 def list_users():
     result = []
@@ -77,11 +80,15 @@ def message(data):
 @socketio.on('match')
 def match(data):
     print("we are here")
-    chosenOne = User.find_closest_rating(data['choice'], data['rating'])
+    #check if user is online
+    chosenOne = User.find_closest_rating(data['choice'], data['rating']) #info user
     print("Name: {}".format(chosenOne.name))
     print("Choice: {}".format(chosenOne.choice))
     print("Rating: {}".format(chosenOne.rating))
     print("Name: {}".format(chosenOne.id))
+    emit('test', {'data': 33} )
+    send("yo")
+    return {"result" : "penis" }
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
