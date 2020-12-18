@@ -19,7 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('status', data => {
-        console.log(`Message recieved: ${data}`);
+        // console.log(msg);
+        var btn1 = document.querySelector('#acting');
+        var btn2 = document.querySelector('#photography');
+        var btn3 = document.querySelector('#model');
+        btn1.parentNode.removeChild(btn1);
+        btn2.parentNode.removeChild(btn2);
+        btn3.parentNode.removeChild(btn3);
+        const p = document.createElement('p');
+        p.innerHTML += "lol";
+        document.querySelector('#display_stuff').append(p);
+        
     });
 
     document.querySelector('#acting').onclick = () => {
