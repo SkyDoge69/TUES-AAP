@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, redirect, url_for, flash, json, request
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
-from flask_socketio import SocketIO, send, emit
+from flask_socketio import SocketIO, send, emit, join_room, leave_room, close_room
 
 from form import *
 from model.user import User
@@ -41,7 +41,7 @@ def login():
     if login_form.validate_on_submit():
         user_object = User.find_by_name(login_form.username.data)
         login_user(user_object)
-        return render_template("ask.html", username = current_user.name, rating = current_user.rating)
+        return render_template("ask.html", username = current_user.name, rating = current_user.rating, room = current_user.room_id)
     return render_template("login.html", form = login_form)
 
 @app.route('/logout', methods=['GET'])
@@ -65,6 +65,14 @@ def ask():
 def chat():
     return render_template("chat.html", username=current_user.name)
 
+@socketio.on('join')
+def join(data):
+    join_room(data['room'])
+
+@socketio.on('leave')
+def leave(data):
+    leave_room(data['room'])
+
 @app.route("/users", methods=["GET"])
 def list_users():
     result = []
@@ -85,10 +93,9 @@ def match(data):
     print("Name: {}".format(chosenOne.name))
     print("Choice: {}".format(chosenOne.choice))
     print("Rating: {}".format(chosenOne.rating))
-    print("Name: {}".format(chosenOne.id))
-    emit('test', {'data': 33} )
-    send("yo")
-    return {"result" : "penis" }
+    print("User_id: {}".format(chosenOne.id))
+    print("Room_id:  {}".format(chosenOne.room_id))
+    emit('status', {'msg': chosenOne.name + " has entered the room."}, room=chosenOne.room_id)
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)

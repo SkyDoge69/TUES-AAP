@@ -44,10 +44,10 @@ class User(UserMixin):
                     "SELECT name, password, choice, rating, room_id, id FROM user WHERE id = ?",
                     (user_id,))
         user = result.fetchone()
-        if user is None:
-            raise ApplicationError(
-                    "User with id {} not found".format(user_id), 404)
-        return User(*user)
+        # if user is None:
+        #     raise ApplicationError(
+        #             "User with id {} not found".format(user_id), 404)
+        # return User(*user)
 
     @staticmethod
     def find_by_name(name):
@@ -68,10 +68,9 @@ class User(UserMixin):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT * FROM user WHERE choice = ? ORDER BY ABS(? - rating) LIMIT 1",
+                    "SELECT name, password, choice, rating, room_id, id FROM user WHERE choice = ? ORDER BY ABS(? - rating) LIMIT 1",
                     (choice, rating))
         user = result.fetchone()
-        print("this is it {}".format(user))
         return User(*user)
 
     @staticmethod

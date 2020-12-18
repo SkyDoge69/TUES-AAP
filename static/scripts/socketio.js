@@ -1,22 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    const username = document.querySelector('#get-username').innerHTML;
-    const rating = document.querySelector('#get-rating').innerHTML;
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.on('connect', () => {
         socket.send("Someone logged in");
         // document.getElementById("#acting").addEventListener("click", function () {
         //     console.log("chose acting")
                   
-        // });
-    
+        // });    
     });
+
+    const room = document.querySelector('#get-room').innerHTML;
+    const username = document.querySelector('#get-username').innerHTML;
+    const rating = document.querySelector('#get-rating').innerHTML;
+
+    joinRoom(room);
 
     socket.on('message', data => {
         console.log(`Message recieved: ${data}`);
     });
 
-    socket.on('test', data => {
+    socket.on('status', data => {
         console.log(`Message recieved: ${data}`);
     });
 
@@ -32,6 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log(username);
   console.log(rating);
+  console.log(room);
   
+  function joinRoom(room) {
+    socket.emit('join', {'room': room});
+  }
   
+  function leaveRoom(room) {
+    socket.emit('leave', {'room': room});
+  }
+
 });
