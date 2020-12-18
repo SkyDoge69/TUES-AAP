@@ -95,7 +95,7 @@ def match(data):
     print("Rating: {}".format(chosenOne.rating))
     print("User_id: {}".format(chosenOne.id))
     print("Room_id:  {}".format(chosenOne.room_id))
-    emit('status', {'msg': chosenOne.name + " has entered the room."}, room=chosenOne.room_id)
+    emit('status', {'msg': chosenOne.name + " has entered the room.", 'question': data['question']}, room=chosenOne.room_id)
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)

@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const room = document.querySelector('#get-room').innerHTML;
     const username = document.querySelector('#get-username').innerHTML;
     const rating = document.querySelector('#get-rating').innerHTML;
-
     joinRoom(room);
 
     socket.on('message', data => {
@@ -19,39 +18,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('status', data => {
-        // console.log(msg);
-        var btn1 = document.querySelector('#acting');
-        var btn2 = document.querySelector('#photography');
-        var btn3 = document.querySelector('#model');
-        btn1.parentNode.removeChild(btn1);
-        btn2.parentNode.removeChild(btn2);
-        btn3.parentNode.removeChild(btn3);
-        const p = document.createElement('p');
-        p.innerHTML += "lol";
-        document.querySelector('#display_stuff').append(p);
+        var answer = window.confirm(data.question + "\nWould you like to answer that?");
+        if (answer) {
+            console.log('You decided to answer this.');
+            removeElementsByClass('main-section');
+
+            const p = document.createElement('p');
+            p.innerHTML += data.question;
+            document.querySelector('#display_stuff').append(p);
+
+          } else {
+            console.log('You dont want to.');
+          }
+
         
     });
 
     document.querySelector('#acting').onclick = () => {
-        console.log('chose acting');
-        socket.emit('match', {
-            'choice': "Acting",
-            'rating': rating
-        });
-        // window.location.href = "http://127.0.0.1:5000/chat";  
+        if (document.querySelector('#question').value == "") {
+            console.log("You must input question!");
+        } else {
+            socket.emit('match', {
+                'choice': "Acting",
+                'rating': rating,
+                'question': document.querySelector('#question').value
+            });
+            document.querySelector('#question').value = ''; 
+        }
         
     }
 
-  console.log(username);
-  console.log(rating);
-  console.log(room);
-  
-  function joinRoom(room) {
-    socket.emit('join', {'room': room});
-  }
-  
-  function leaveRoom(room) {
-    socket.emit('leave', {'room': room});
-  }
+    console.log(username);
+    console.log(rating);
+    console.log(room);
+    
+    function joinRoom(room) {
+        socket.emit('join', {'room': room});
+    }
+    
+    function leaveRoom(room) {
+        socket.emit('leave', {'room': room});
+    }
+
+    function removeElementsByClass(className){
+        var elements = document.getElementsByClassName(className);
+            while(elements.length > 0){
+                elements[0].parentNode.removeChild(elements[0]);
+            }
+        }
 
 });

@@ -13,11 +13,16 @@
 </head>
 
 <body>
-  <h2>AAP</h2>
-  <h1>Which of these is your question closest to?</h1>
-  <button type="button" class="btn btn-danger" id="acting">Acting</button>
-  <button type="button" class="btn btn-warning" id="photography">Photography</button>
-  <button type="button" class="btn btn-dark" id="model">Model</button>
+  <div class="main-section">
+    <h2>AAP</h2>
+    <h1 id="above_input">What is your question?</h1>
+    <input type="text" id="question" placeholder="My question">
+    <hr>
+    <h1 id="above_choice">What is the question related to?</h1>
+    <button type="button" class="btn btn-danger" id="acting">Acting</button>
+    <button type="button" class="btn btn-warning" id="photography">Photography</button>
+    <button type="button" class="btn btn-dark" id="model">Model</button>
+  </div>
 
   <span id="get-username">{{ username }}</span>
   <span id="get-rating">{{ rating }}</span>
