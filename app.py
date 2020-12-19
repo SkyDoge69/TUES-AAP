@@ -94,7 +94,6 @@ def match(data):
 
 @socketio.on('redirect_asker')
 def redirect(data):
-    print(data['user_id'])
     user = User.find(int(data['user_id']))
     emit('redirect', {'question': data['question']}, room = user.room_id)
 
