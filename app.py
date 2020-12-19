@@ -41,7 +41,7 @@ def login():
     if login_form.validate_on_submit():
         user_object = User.find_by_name(login_form.username.data)
         login_user(user_object)
-        return render_template("ask.html", username = current_user.name, rating = current_user.rating, room = current_user.room_id)
+        return render_template("ask.html", username = current_user.name, rating = current_user.rating, room = current_user.room_id, id = current_user.id)
     return render_template("login.html", form = login_form)
 
 @app.route('/logout', methods=['GET'])
@@ -89,13 +89,14 @@ def message(data):
 def match(data):
     print("we are here")
     #check if user is online
-    chosenOne = User.find_closest_rating(data['choice'], data['rating']) #info user
-    print("Name: {}".format(chosenOne.name))
-    print("Choice: {}".format(chosenOne.choice))
-    print("Rating: {}".format(chosenOne.rating))
-    print("User_id: {}".format(chosenOne.id))
-    print("Room_id:  {}".format(chosenOne.room_id))
-    emit('status', {'msg': chosenOne.name + " has entered the room.", 'question': data['question']}, room=chosenOne.room_id)
+    chosenOne = User.find_closest_rating(data['choice'], data['rating'])
+    emit('question_match', {'question': data['question'], 'user_id': current_user.id}, room=chosenOne.room_id)
+
+@socketio.on('redirect_asker')
+def redirect(data):
+    print(data['user_id'])
+    user = User.find(int(data['user_id']))
+    emit('redirect', {'question': data['question']}, room = user.room_id)
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
