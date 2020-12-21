@@ -1,0 +1,187 @@
+.wrapper {
+    display: flex;
+}
+
+#main-section {
+    overflow: hidden; /* Makee this div contain its floated children */
+    width: 100%;
+}
+
+#sidebar {
+    margin-top: 2em;
+    float: left; /* Make this div as wide as its contents */
+    /* /min-height: 67vh; */
+    padding-left: 1em;
+    padding-top: 3em;
+    padding-right:1em;
+    border-right: 0.5px solid #898c91;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: calc(100vh - 85px); 
+}
+
+#sidebar p {
+    padding-left: 2em;
+    padding-right:2em;
+}
+
+#sidebar p:hover {
+    background-color: #66a1ee;
+}
+
+#sidebar h4 {padding-left: 0.5em;}
+
+
+@media (max-width: 567px) {
+    #sidebar {
+        display: none;
+    }
+
+    #sidebar.view-sidebar {
+        display: block;
+    }
+
+    #show-sidebar-button {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+
+#room_name {
+    margin-left: 0.2em;
+    margin-bottom: 0.2em;
+    padding-left: 0.33em;
+    width: 11.8em;
+}
+
+#invite_name {
+    margin-left: 0.2em;
+    margin-bottom: 0.2em;
+    padding-left: 0.33em;
+    width: 8.5em;
+}
+
+
+#delete_room {
+    margin-left: 4em;
+}
+
+.btn-primary {
+    margin: 0.2em;
+    border: none;
+}
+
+#send_message {
+    background-color: #66a1ee;
+    border: none;
+}
+
+#rightside-pannel {
+    overflow: hidden; /* Make this div take up the rest of the horizontal space, and no more */
+}
+
+#display-message-section {
+    margin-top: 5em;
+    min-height: 82vh;
+    max-height: 82vh;
+    overflow-y: auto; /*Make  this section scrolable */
+}
+
+#input-area {
+    padding-left: 1em;
+    padding-right: 1em;
+    bottom: 0;
+}
+
+input[type=text]:focus{
+    border-color: #66a1ee;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 10px #66a1ee;
+
+}
+
+@keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+ 
+.my-msg {
+    margin-right:7em;
+    margin-left: 1em;
+    padding: 0.5em 0.5em 0.5em 1em;
+    border-radius: 5px;
+    border-color: grey;
+    border-width: 0.5px;
+    border-style: solid;
+}
+
+.others-msg {
+    margin-left:7em;
+    margin-right:1em;
+    padding: 0.5em 0.5em 0.5em 1em;
+    border-radius: 5px;
+    border-color: #206ED2;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.my-img {
+    margin-left: 2em;
+    margin-bottom: 1em;
+    border-radius: 5px;
+    border-color:  grey;
+    border-width: 1px;
+    border-style: solid;
+    max-width: 15em;
+    max-height: 15em;
+}
+
+.others-img {
+    margin-left: 50em;
+    margin-bottom: 1em;
+    border-radius: 5px;
+    border-color: #206ED2;
+    border-width: 1px;
+    border-style: solid;
+    max-width: 15em;
+    max-height: 15em;
+}
+
+.system-msg {
+    margin-right:7em;
+    margin-left: 1em;
+    padding: 0.5em 0.5em 0.5em 1em;
+    color: #656d78;
+    font-size:0.9em;
+}
+
+.timestamp {
+    color: #656d78;
+    font-size:0.7em;
+}
+
+.my-username {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #206ED2;
+}
+
+.other-username {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: rgb(90, 196, 173);
+}
+
+#msg-input {
+    border-color: #ffc107;
+    border-width: 5px;
+}
+
+#get-username {
+    display: none !important;
+}
