@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         p.innerHTML += span_username.outerHTML + br.outerHTML + data.msg + br.outerHTML + span_timestamp.outerHTML;
         document.querySelector('#display-message-section').append(p);
         
-        // scrollDownChatWindow();
+        scrollDownChatWindow();
     });
 
 
