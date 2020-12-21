@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, redirect, url_for, flash, json, request
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from flask_socketio import SocketIO, send, emit, join_room, leave_room, close_room
+from time import localtime, strftime
 
 from form import *
 from model.user import User
@@ -96,6 +97,11 @@ def match(data):
 def redirect(data):
     user = User.find(int(data['user_id']))
     emit('redirect', {'question': data['question']}, room = user.room_id)
+
+@socketio.on('message')
+def send_message(data):
+    current_time = strftime('%b-%d %I:%M%p', localtime())
+    send({'msg': data['msg'], 'username': data['username'], 'time_stamp': current_time}, room = data['room'])
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
