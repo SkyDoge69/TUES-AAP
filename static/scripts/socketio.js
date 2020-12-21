@@ -23,9 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('#display_stuff').append(p);
             socket.emit('redirect_asker', {
                 'question': data.question,
-                'user_id': data.user_id
+                'user_id': data.user_id,
+                'room_substring': data.room_substring
             })
+            console.log(data.room_substring);
+            //iskame da se generira substring ot id-to i na dvamata, i tova da e ob6t room?
             //code to redirect here soon
+            // joinRoom(data.room_substring)
           } else {
             console.log('You dont want to.');
           }
@@ -36,7 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const p = document.createElement('p');
         p.innerHTML += data.question;
         document.querySelector('#display_stuff').append(p);
-        //code to redirect here soon?
+        console.log(data.room_substring);
+        // code to redirect here
+        // joinRoom(data.room_substring);
     });
 
 
@@ -89,11 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(room);
     
     function joinRoom(room) {
-        socket.emit('join', {'room': room});
+        socket.emit('join', {'username': username, 'room': room});
     }
     
     function leaveRoom(room) {
-        socket.emit('leave', {'room': room});
+        socket.emit('leave', {'username': username, 'room': room});
     }
 
     function removeElementsByClass(className){

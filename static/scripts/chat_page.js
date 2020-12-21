@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         p.innerHTML += span_username.outerHTML + br.outerHTML + data.msg + br.outerHTML + span_timestamp.outerHTML;
         document.querySelector('#display-message-section').append(p);
-        
         scrollDownChatWindow();
     });
 
@@ -56,11 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function joinRoom(room) {
-        socket.emit('join', {'room': room});
+        socket.emit('join', {'username': username, 'room': room});
     }
     
     function leaveRoom(room) {
-        socket.emit('leave', {'room': room});
+        socket.emit('leave', {'username': username, 'room': room});
     }
 
 

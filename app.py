@@ -69,6 +69,7 @@ def chat():
 @socketio.on('join')
 def join(data):
     join_room(data['room'])
+    User.update_room(data['room'], User.find_by_name(data['username']).name)
 
 @socketio.on('leave')
 def leave(data):
@@ -89,14 +90,16 @@ def message(data):
 @socketio.on('match')
 def match(data):
     print("we are here")
-    #check if user is online
     chosenOne = User.find_closest_rating(data['choice'], data['rating'])
-    emit('question_match', {'question': data['question'], 'user_id': current_user.id}, room=chosenOne.room_id)
+    room_substring = 'room' + str(chosenOne.room_id) + str(current_user.room_id)
+    print(room_substring)
+    emit('question_match', {'question': data['question'], 'user_id': current_user.id,
+                            'room_substring': room_substring}, room=chosenOne.room_id)
 
 @socketio.on('redirect_asker')
 def redirect(data):
     user = User.find(int(data['user_id']))
-    emit('redirect', {'question': data['question']}, room = user.room_id)
+    emit('redirect', {'question': data['question'], 'room_substring': data['room_substring']}, room = user.room_id)
 
 @socketio.on('message')
 def send_message(data):
