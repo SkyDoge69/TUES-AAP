@@ -83,6 +83,13 @@ def list_users():
         result.append(user.to_dict())
     return jsonify(result), 201
 
+@app.route("/archive", methods=["GET"])
+def list_questions():
+    result = []
+    for question in Question.all():
+        result.append(question.to_dict())
+    return jsonify(result), 201
+
 @socketio.on('message')
 def message(data):
     print(f"\n\n{ data }\n\n")
@@ -92,6 +99,8 @@ def message(data):
 def on_ask(data):
     matched_user = User.find_closest_rating(data['choice'], data['rating'])
     chat_room_id =  str(matched_user.name) + '_' + str(current_user.name)
+    question = Question(data['question'], "", current_user.name)
+    question.save()
     emit('new_question', {'question': data['question'], 'asking_user_id': current_user.id,
                             'chat_room_id': chat_room_id}, room=matched_user.room_id)
 

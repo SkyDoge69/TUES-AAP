@@ -1,7 +1,7 @@
 from database import SQLite
 from errors import ApplicationError
 
-class Question():
+class Question(object):
  
     def __init__(self, content, answer, user, question_id=None):
         self.id = question_id
@@ -66,7 +66,7 @@ class Question():
             return [Question(*row) for row in result]
  
     def __get_save_query(self):
-        query = "{} INTO user {} VALUES {}"
+        query = "{} INTO question {} VALUES {}"
         if self.id == None:
             args = (self.content, self.answer, self.user)
             query = query.format("INSERT", "(content, answer, user)", args)
