@@ -5,6 +5,7 @@ from time import localtime, strftime
 
 from form import *
 from model.user import User
+from model.question import Question
 import json
 import uuid
 
@@ -62,8 +63,8 @@ def ask():
     user.update_choice(data, user.password)
     return redirect(url_for('login'))
 
-@app.route("/chat", methods=['GET', 'POST'])
-def chat():
+@app.route("/chat/<room_substring>", methods=['GET', 'POST'])
+def chat(room_substring):
     return render_template("chat.html", username=current_user.name)
 
 @socketio.on('join')
@@ -87,24 +88,28 @@ def message(data):
     print(f"\n\n{ data }\n\n")
     send(data)
 
-@socketio.on('match')
-def match(data):
-    print("we are here")
-    chosenOne = User.find_closest_rating(data['choice'], data['rating'])
-    room_substring = 'room' + str(chosenOne.room_id) + str(current_user.room_id)
-    print(room_substring)
-    emit('question_match', {'question': data['question'], 'user_id': current_user.id,
-                            'room_substring': room_substring}, room=chosenOne.room_id)
+@socketio.on('ask')
+def on_ask(data):
+    matched_user = User.find_closest_rating(data['choice'], data['rating'])
+    chat_room_id =  str(matched_user.name) + '_' + str(current_user.name)
+    emit('new_question', {'question': data['question'], 'asking_user_id': current_user.id,
+                            'chat_room_id': chat_room_id}, room=matched_user.room_id)
 
 @socketio.on('redirect_asker')
-def redirect(data):
-    user = User.find(int(data['user_id']))
-    emit('redirect', {'question': data['question'], 'room_substring': data['room_substring']}, room = user.room_id)
+def on_redirect_asker(data):
+    asking_user = User.find(int(data['asking_user_id']))
+    print("YOYO BITCH: " + asking_user.name)
+    print("YOYO BITCH: " + asking_user.room_id)
+    emit('redirect', {'chat_room_id': data['chat_room_id']}, room = asking_user.room_id)
+
+def send_message(content, username, room):
+    current_time = strftime('%b-%d %I:%M%p', localtime())
+    send({'msg': content, 'username': username, 'time_stamp': current_time}, room = room)
 
 @socketio.on('message')
-def send_message(data):
-    current_time = strftime('%b-%d %I:%M%p', localtime())
-    send({'msg': data['msg'], 'username': data['username'], 'time_stamp': current_time}, room = data['room'])
+def message(data):
+    print("data is:" + data)
+    send_message(data['msg'], data['username'], data['room'])
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)

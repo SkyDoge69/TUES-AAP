@@ -17,6 +17,18 @@ CREATE TABLE IF NOT EXISTS user
 ''')
 conn.commit()
 
+conn.cursor().execute('''
+CREATE TABLE IF NOT EXISTS question
+    (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        content TEXT NOT NULL,
+        answer TEXT NOT NULL,
+        user TEXT NOT NULL,
+        FOREIGN KEY(user) REFERENCES user(name)
+    )
+''')
+conn.commit()
+
 
 class SQLite(object):
 
