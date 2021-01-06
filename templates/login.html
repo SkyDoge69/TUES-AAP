@@ -1,16 +1,15 @@
+{% extends "base.html" %}
 {% from 'form_macro.html' import displayField %}
 
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <title>Login</title>
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link rel="stylesheet" type="text/css" href="../static/styles/login.css">
-    </head>
-    <body>
-        
-        
+
+{% block title %} Login {% endblock  %}
+
+{% block style %}
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/login.css">
+{% endblock %}
+
+{% block content %}
         <div class="sidenav">
             <div class="login-main-text">
                 <h2>AAP<br> The fun begins.</h2>
@@ -36,7 +35,10 @@
                 </div>
             </div>
         </div>
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    </body>
-    </html>
+{% endblock %}
+
+{% block script %}
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+{% endblock %}
+    
