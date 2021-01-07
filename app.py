@@ -98,18 +98,19 @@ def message(data):
 @socketio.on('ask')
 def on_ask(data):
     matched_user = User.find_closest_rating(data['choice'], data['rating'])
-    chat_room_id =  str(matched_user.name) + '_' + str(current_user.name)
-    question = Question(data['question'], "", current_user.name)
-    question.save()
-    emit('new_question', {'question': data['question'], 'asking_user_id': current_user.id,
-                            'chat_room_id': chat_room_id}, room=matched_user.room_id)
+    if matched_user.name != current_user.name:
+        chat_room_id =  str(matched_user.name) + '_' + str(current_user.name)
+        question = Question(data['question'], "", current_user.name)
+        question.save()
+        emit('new_question', {'question': data['question'], 'asking_user_id': current_user.id,
+                                'chat_room_id': chat_room_id}, room=matched_user.room_id)
 
 @socketio.on('redirect_asker')
 def on_redirect_asker(data):
     asking_user = User.find(int(data['asking_user_id']))
     print("YOYO BITCH: " + asking_user.name)
     print("YOYO BITCH: " + asking_user.room_id)
-    emit('redirect', {'chat_room_id': data['chat_room_id']}, room = asking_user.room_id)
+    emit('redirecting', {'chat_room_id': data['chat_room_id']}, room = asking_user.room_id)
 
 def send_message(content, username, room):
     current_time = strftime('%b-%d %I:%M%p', localtime())
@@ -117,7 +118,6 @@ def send_message(content, username, room):
 
 @socketio.on('message')
 def message(data):
-    print("data is:" + data)
     send_message(data['msg'], data['username'], data['room'])
 
 if __name__ == "__main__":
