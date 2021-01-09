@@ -1,48 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
     var socket = io.connect('http://' + document.domain + ':' + location.port);
-    socket.on('connect', () => {
-        socket.send("Someone logged in");
-    });
+
 
     const room = document.querySelector('#get-room').innerHTML;
     const username = document.querySelector('#get-username').innerHTML;
     const rating = document.querySelector('#get-rating').innerHTML;
     joinRoom(room);
 
-    socket.on('message', data => {
-        console.log(`Message recieved: ${data}`);
-    });
+    // function rateAndGo1() {
+    //     console.log(1);
+    //     window.location.replace("http://127.0.0.1:5000/");
+    // }
+
 
     socket.on('question_match', data => {
+        console.log("pi6 mi q6kata");
         var answer = window.confirm(data.question + "\nWould you like to answer that?");
         if (answer) {
-            console.log('You decided to answer this.');
-            removeElementsByClass('main-section');
-            const p = document.createElement('p');
-            p.innerHTML += data.question;
-            document.querySelector('#display_stuff').append(p);
-            socket.emit('redirect_asker', {
-                'question': data.question,
-                'user_id': data.user_id,
-                'room_substring': data.room_substring
-            })
-            console.log(data.room_substring);
-            //iskame da se generira substring ot id-to i na dvamata, i tova da e ob6t room?
-            //code to redirect here soon
-            // joinRoom(data.room_substring)
-          } else {
+            console.log(`You decided to answer this. ${data.room_id}`);
+            socket.emit('redirect_asker', data);
+            window.location.replace("http://127.0.0.1:5000/chat");
+        } else {
             console.log('You dont want to.');
-          }
+        }
     });
 
     socket.on('redirect', data => {
-        removeElementsByClass('main-section');
-        const p = document.createElement('p');
-        p.innerHTML += data.question;
-        document.querySelector('#display_stuff').append(p);
-        console.log(data.room_substring);
-        // code to redirect here
-        // joinRoom(data.room_substring);
+        window.location.replace("http://127.0.0.1:5000/chat");
     });
 
 
@@ -88,8 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
     }
 
-
-
     console.log(username);
     console.log(rating);
     console.log(room);
@@ -108,5 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 elements[0].parentNode.removeChild(elements[0]);
             }
     }
+
 
 });

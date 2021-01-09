@@ -83,6 +83,15 @@ class User(UserMixin):
             raise ApplicationError("No user present", 404)
 
     @staticmethod
+    def update_rating(rating, name):
+        result = None
+        with SQLite() as db:
+            result = db.execute("UPDATE user SET rating = ? WHERE name = ?",
+                    (rating, name))
+        if result.rowcount == 0:
+            raise ApplicationError("No user present", 404)
+
+    @staticmethod
     def update_room(room_id, name):
         result = None
         with SQLite() as db:

@@ -27,7 +27,16 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a id="logout-btn" class="nav-link" href="{{ url_for('logout') }}"><span style="color: #335177">Logout</span></a>
+                            <div class="dropdown">
+                                <button onclick="dropDown()" class="dropbtn">Rate and quit</button>
+                                <div id="myDropdown" class="dropdown-content">
+                                  <p id="fiveStar">☆ ☆ ☆ ☆ ☆</a>
+                                  <p id="fourStar"> ☆ ☆ ☆ ☆</a>
+                                  <p id="threeStar"> ☆ ☆ ☆</a>
+                                  <p id="twoStar"> ☆ ☆</a>
+                                  <p id="oneStar"> ☆</a>
+                                </div>
+                              </div>
                         </li>
                     </ul>
                 </div>
@@ -50,6 +59,26 @@
 </div>
 <span id="get-username">{{ username }}</span>
 
+<script>
+     function dropDown() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+          
+          // Close the dropdown if the user clicks outside of it
+          window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+              var dropdowns = document.getElementsByClassName("dropdown-content");
+              var i;
+              for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                  openDropdown.classList.remove('show');
+                }
+              }
+            }
+          }
+    
+</script>
 
     <script src="{{url_for('static', filename='scripts/functionality.js')}}"></script>
     <script src="{{ url_for('static', filename='scripts/chat_page.js') }}"></script>

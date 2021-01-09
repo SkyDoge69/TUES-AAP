@@ -63,8 +63,8 @@ def ask():
     user.update_choice(data, user.password)
     return redirect(url_for('login'))
 
-@app.route("/chat/<room_substring>", methods=['GET', 'POST'])
-def chat(room_substring):
+@app.route("/chat", methods=['GET', 'POST'])
+def chat():
     return render_template("chat.html", username=current_user.name)
 
 @socketio.on('join')
@@ -95,22 +95,34 @@ def message(data):
     print(f"\n\n{ data }\n\n")
     send(data)
 
-@socketio.on('ask')
-def on_ask(data):
-    matched_user = User.find_closest_rating(data['choice'], data['rating'])
-    if matched_user.name != current_user.name:
-        chat_room_id =  str(matched_user.name) + '_' + str(current_user.name)
-        question = Question(data['question'], "", current_user.name)
-        question.save()
-        emit('new_question', {'question': data['question'], 'asking_user_id': current_user.id,
-                                'chat_room_id': chat_room_id}, room=matched_user.room_id)
+@socketio.on('match')
+def match(data):
+    chosenOne = User.find_closest_rating(data['choice'], data['rating'])
+    # TODO: Filter me!
+    room_id = str(uuid.uuid4())
+    print("NEW ROOM ID IS {}".format(room_id))
+    print("You are {}".format(chosenOne))
+    print("I am {}".format(current_user))
+    emit('question_match', {'question': data['question'], 'user_id': current_user.id,
+                            'room_id': room_id}, room=chosenOne.room_id)
 
 @socketio.on('redirect_asker')
 def on_redirect_asker(data):
-    asking_user = User.find(int(data['asking_user_id']))
-    print("YOYO BITCH: " + asking_user.name)
-    print("YOYO BITCH: " + asking_user.room_id)
-    emit('redirecting', {'chat_room_id': data['chat_room_id']}, room = asking_user.room_id)
+    print("CURRENT USER ON REDIRECT_ASKER {}".format(current_user.id))
+    print("DATA IS {}".format(data))
+    user = User.find(int(data['user_id']))
+    join_room(data["room_id"])
+    emit('redirect', {'question': data['question'], 'room_id': data['room_id']}, room = user.room_id)
+
+@socketio.on('rate')
+def rate(data):
+    new_rating = (current_user.rating + int(data['rating']))/2
+    current_user.rating = new_rating
+    current_user.save()
+    print("znaeee6")
+    # emit('question_match', {'question': data['question'], 'user_id': current_user.id,
+    #                         'room_id': room_id}, room=chosenOne.room_id)
+
 
 def send_message(content, username, room):
     current_time = strftime('%b-%d %I:%M%p', localtime())

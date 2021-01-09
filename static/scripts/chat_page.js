@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var socket = io.connect('http://' + document.domain + ':' + location.port);  
 
     const username = document.querySelector('#get-username').innerHTML;
-    let room = 'Chat';
+    room = "Chat";
     joinRoom(room);
 
     socket.on('message', data => {
@@ -40,6 +40,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#user_message').value = '';        
     }
 
+    document.querySelector('#fiveStar').onclick = () => {
+        console.log("5");
+        socket.emit('rate', {'rating': 5 });
+        // have to figure out how to update the other user
+    }
+
+    document.querySelector('#fourStar').onclick = () => {
+        socket.emit('rate', {'rating': 4 });
+    }
+
+    document.querySelector('#threeStar').onclick = () => {
+        socket.emit('rate', {'rating': 3 });
+    }
+
+    document.querySelector('#twoStar').onclick = () => {
+        socket.emit('rate', {'rating': 2 });
+    }
+
+    document.querySelector('#oneStar').onclick = () => {
+        socket.emit('rate', {'rating': 1 });
+    }
     
     function scrollDownChatWindow() {
         const chatWindow = document.querySelector("#display-message-section");
@@ -61,6 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function leaveRoom(room) {
         socket.emit('leave', {'username': username, 'room': room});
     }
+
+        
+    
 
 
 });
