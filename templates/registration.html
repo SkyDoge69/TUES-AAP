@@ -4,8 +4,7 @@
 {% block title %} Registration {% endblock  %}
 
 {% block style %}
-  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <link rel="stylesheet" type="text/css" href="../static/styles/registration.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/registration.css') }}">
 {% endblock %}
 
 
@@ -20,7 +19,7 @@
           <div class="col-md-6 col-sm-12">
             <div class="registration-form">
               <form action="{{ url_for('register') }}", method="POST">
-            
+
               {{ displayField(form.username, 'Username', autocomplete="off", autofocus=true) }}
               {{ displayField(form.password, 'Password') }}
               {{ displayField(form.confirm_password, 'Confirm password') }}
@@ -34,9 +33,4 @@
           </div>
         </div>
 
-{% endblock %}
-
-{% block script %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 {% endblock %}

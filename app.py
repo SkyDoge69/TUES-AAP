@@ -1,24 +1,20 @@
-from flask import Flask, render_template, jsonify, redirect, url_for, flash, json, request
+from flask import Flask, render_template, jsonify, redirect, url_for, flash, request
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from flask_socketio import SocketIO, send, emit, join_room, leave_room, close_room
-from time import localtime, strftime
-
 from form import *
+
+from errors import register_error_handlers
+from login import login_manager
 from model.user import User
 from model.question import Question
-import json
 import uuid
 
 app = Flask(__name__)
 app.secret_key = 'shushumushu'
 socketio = SocketIO(app)
-
-login_manager = LoginManager()
+register_error_handlers(app)
 login_manager.init_app(app)
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.find(user_id)
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -43,7 +39,7 @@ def login():
     if login_form.validate_on_submit():
         user_object = User.find_by_name(login_form.username.data)
         login_user(user_object)
-        return render_template("ask.html", username = current_user.name, rating = current_user.rating, room = current_user.room_id, id = current_user.id)
+        return redirect(url_for('ask'))
     return render_template("login.html", form = login_form)
 
 @app.route('/logout', methods=['GET'])
@@ -53,17 +49,29 @@ def logout():
     return redirect(url_for('home'))
 
 @app.route("/choice", methods=["GET", "POST"])
+@login_required
 def choice():
-    return render_template("choice.html")
+    if current_user.choice != 'Hasn\'t chosen':
+        flash('You have already chosen a category')
+        return redirect(url_for('home'))
+    if request.method == "POST":
+        category = request.form["category"]
+        # TODO: Validate category
+        current_user.update_choice(category)
+        return redirect(url_for("ask"))
+    else:
+        return render_template("choice.html")
 
-@app.route("/ask", methods=["GET", "POST"])
+
+@app.route("/ask", methods=["GET"])
+@login_required
 def ask():
-    data = request.form['data']
-    user = User.get_last_registered()
-    user.update_choice(data, user.password)
-    return redirect(url_for('login'))
+    if current_user.choice == 'Hasn\'t chosen':
+        return redirect(url_for('choice'))
+    return render_template("ask.html")
 
-@app.route("/chat", methods=['GET', 'POST'])
+
+@app.route("/chat", methods=["GET", "POST"])
 def chat():
     return render_template("chat.html", username=current_user.name)
 

@@ -1,17 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-
     const room = document.querySelector('#get-room').innerHTML;
     const username = document.querySelector('#get-username').innerHTML;
     const rating = document.querySelector('#get-rating').innerHTML;
-    joinRoom(room);
 
-    // function rateAndGo1() {
-    //     console.log(1);
-    //     window.location.replace("http://127.0.0.1:5000/");
-    // }
-
+    socket.on('message', data => {
+        console.log(`Message recieved: ${data}`);
+    });
 
     socket.on('question_match', data => {
         console.log("pi6 mi q6kata");
@@ -39,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
-            document.querySelector('#question').value = ''; 
+            document.querySelector('#question').value = '';
         }
-        
+
     }
 
     document.querySelector('#photography').onclick = () => {
@@ -53,9 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
-            document.querySelector('#question').value = ''; 
+            document.querySelector('#question').value = '';
         }
-        
+
     }
 
     document.querySelector('#model').onclick = () => {
@@ -67,22 +63,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
-            document.querySelector('#question').value = ''; 
+            document.querySelector('#question').value = '';
         }
-        
+
     }
+
 
     console.log(username);
     console.log(rating);
     console.log(room);
-    
-    function joinRoom(room) {
-        socket.emit('join', {'username': username, 'room': room});
-    }
-    
-    function leaveRoom(room) {
-        socket.emit('leave', {'username': username, 'room': room});
-    }
 
     function removeElementsByClass(className){
         var elements = document.getElementsByClassName(className);
@@ -90,6 +79,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 elements[0].parentNode.removeChild(elements[0]);
             }
     }
-
 
 });

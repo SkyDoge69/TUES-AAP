@@ -1,4 +1,4 @@
-import json
+from flask import flash
 
 class ApplicationError(Exception):
 
@@ -10,8 +10,12 @@ class ApplicationError(Exception):
     def to_dict(self):
         return { "message": self.message }
 
+
 def __handle_error(error):
-    return json.dumps(error.to_dict()), error.status_code
+    flash(error.message, "error")
+    #TODO ???
+    return ""
+
 
 def register_error_handlers(app):
     app.register_error_handler(ApplicationError, __handle_error)

@@ -3,7 +3,6 @@
 {% block title %} Ask {% endblock  %}
 
 {% block style %}
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/ask.css') }}">
 {% endblock %}
 
@@ -21,23 +20,87 @@
     </div>
   </div>
 
-  
-  <span id="get-username">{{ username }}</span>
-  <span id="get-rating">{{ rating }}</span>
-  <span id="get-room">{{ room }}</span>
-  <span id="get-id">{{ id }}</span>
-  
   <div id="display_stuff">
-    
+
   </div>
 
 {% endblock %}
 
 {% block script %}
-  <script src="{{url_for('static', filename='scripts/socketio.js')}}"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='scripts/ask.js') }}"></script>
+    <script type="text/javascript">
+      $( document ).ready(function() {
+        var socket = io.connect();
+
+        var username = "{{ current_user.name }}";
+        var room_id = "{{ current_user.room_id }}";
+        var rating = {{ current_user.rating }};
+
+        socket.on('connect', data => {
+            socket.emit('join', {'username': username, 'room': room_id});
+        });
+
+        socket.on('question_match', data => {
+            var answer = window.confirm(data.question + "\nWould you like to answer that?");
+            if (answer) {
+                console.log(`You decided to answer this. ${data.room_id}`);
+                socket.emit('redirect_asker', data);
+                window.location.replace("http://127.0.0.1:5000/chat");
+            } else {
+                console.log('You dont want to.');
+            }
+        });
+
+        socket.on('redirect', data => {
+            window.location.replace("http://127.0.0.1:5000/chat");
+        });
+
+
+    document.querySelector('#acting').onclick = () => {
+        if (document.querySelector('#question').value == "") {
+            console.log("You must input question!");
+        } else {
+            socket.emit('match', {
+                'choice': "Acting",
+                'rating': rating,
+                'question': document.querySelector('#question').value
+            });
+            document.querySelector('#question').value = ''; 
+        }
+        
+    }
+
+    document.querySelector('#photography').onclick = () => {
+        if (document.querySelector('#question').value == "") {
+            console.log("You must input question!");
+        } else {
+            socket.emit('match', {
+                'choice': "Photography",
+                'rating': rating,
+                'question': document.querySelector('#question').value
+            });
+            document.querySelector('#question').value = ''; 
+        }
+        
+    }
+
+    document.querySelector('#model').onclick = () => {
+        if (document.querySelector('#question').value == "") {
+            console.log("You must input question!");
+        } else {
+            socket.emit('match', {
+                'choice': "Model",
+                'rating': rating,
+                'question': document.querySelector('#question').value
+            });
+            document.querySelector('#question').value = ''; 
+        }
+        
+    }
+
+    console.log(username);
+    console.log(rating);
+    console.log(room_id);
+      });
+    </script>
 {% endblock %}

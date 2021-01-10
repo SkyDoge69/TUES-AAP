@@ -3,7 +3,7 @@ from errors import ApplicationError
 from flask_login import UserMixin
 
 class User(UserMixin):
- 
+
     def __init__(self, name, password, choice, rating, room_id, user_id=None):
         self.id = user_id
         self.name = name
@@ -11,7 +11,7 @@ class User(UserMixin):
         self.choice = choice
         self.rating = rating
         self.room_id = room_id
- 
+
     def to_dict(self):
         user_data = self.__dict__
         return user_data
@@ -20,13 +20,37 @@ class User(UserMixin):
         user_data = self.__dict__
         del user_data["password"]
         return user_data
- 
+
     def save(self):
         with SQLite() as db:
             cursor = db.execute(self.__get_save_query())
             self.id = cursor.lastrowid
         return self
- 
+
+    def update_choice(self, choice):
+        result = None
+        with SQLite() as db:
+            result = db.execute("UPDATE user SET choice = ? WHERE id = ?",
+                    (choice, self.id))
+        if result.rowcount == 0:
+            raise ApplicationError("No user present", 404)
+
+    def update_rating(self, rating):
+        result = None
+        with SQLite() as db:
+            result = db.execute("UPDATE user SET rating = ? WHERE id = ?",
+                    (rating, self.id))
+        if result.rowcount == 0:
+            raise ApplicationError("No user present", 404)
+
+    def update_room(self, room_id):
+        result = None
+        with SQLite() as db:
+            result = db.execute("UPDATE user SET room_id = ? WHERE id = ?",
+                    (room_id, self.id))
+        if result.rowcount == 0:
+            raise ApplicationError("No user present", 404)
+
     @staticmethod
     def delete(user_id):
         result = None
@@ -35,7 +59,7 @@ class User(UserMixin):
                     (user_id,))
         if result.rowcount == 0:
             raise ApplicationError("No value present", 404)
- 
+
     @staticmethod
     def find(user_id):
         result = None
@@ -74,33 +98,6 @@ class User(UserMixin):
         return User(*user)
 
     @staticmethod
-    def update_choice(choice, name):
-        result = None
-        with SQLite() as db:
-            result = db.execute("UPDATE user SET choice = ? WHERE name = ?",
-                    (choice, name))
-        if result.rowcount == 0:
-            raise ApplicationError("No user present", 404)
-
-    @staticmethod
-    def update_rating(rating, name):
-        result = None
-        with SQLite() as db:
-            result = db.execute("UPDATE user SET rating = ? WHERE name = ?",
-                    (rating, name))
-        if result.rowcount == 0:
-            raise ApplicationError("No user present", 404)
-
-    @staticmethod
-    def update_room(room_id, name):
-        result = None
-        with SQLite() as db:
-            result = db.execute("UPDATE user SET room_id = ? WHERE name = ?",
-                    (room_id, name))
-        if result.rowcount == 0:
-            raise ApplicationError("No user present", 404)
-
-    @staticmethod
     def get_last_registered():
         result = None
         with SQLite() as db:
@@ -111,15 +108,15 @@ class User(UserMixin):
         if user is None:
             return None
         return User(*user)
-    
- 
+
+
     @staticmethod
     def all():
         with SQLite() as db:
             result = db.execute(
                     "SELECT name, password, choice, rating, room_id, id FROM user").fetchall()
             return [User(*row) for row in result]
- 
+
     def __get_save_query(self):
         query = "{} INTO user {} VALUES {}"
         if self.id == None:
