@@ -69,17 +69,21 @@ def choice():
 def ask():
     if current_user.choice == 'Hasn\'t chosen':
         return redirect(url_for('choice'))
-    return render_template("ask.html")
+    return render_template("ask.html", user = current_user)
 
 
 @app.route("/chat", methods=["GET", "POST"])
 def chat():
-    return render_template("chat.html", username=current_user.name)
+    return render_template("chat.html", username=current_user.name, room_id = current_user.room_id)
 
 @socketio.on('join')
 def join(data):
+    print("EYOOOO\n")
+    print(data['room'])
+    print(data['username'])
     join_room(data['room'])
-    User.update_room(data['room'], User.find_by_name(data['username']).name)
+    User.update_room(str(data['room']), str(data['username']))
+    
 
 @socketio.on('leave')
 def leave(data):
@@ -120,7 +124,6 @@ def on_redirect_asker(data):
     print("CURRENT USER ON REDIRECT_ASKER {}".format(current_user.id))
     print("DATA IS {}".format(data))
     user = User.find(int(data['user_id']))
-    join_room(data["room_id"])
     emit('redirect', {'question': data['question'], 'room_id': data['room_id']}, room = user.room_id)
 
 @socketio.on('rate')

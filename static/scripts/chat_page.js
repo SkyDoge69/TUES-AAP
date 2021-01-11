@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     var socket = io.connect('http://' + document.domain + ':' + location.port);  
 
     const username = document.querySelector('#get-username').innerHTML;
+    //room = username.room_id ili ne6o takova
+
     room = "Chat";
     joinRoom(room);
 
@@ -37,29 +39,42 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#send_message').onclick = () => {
         socket.send({'msg': document.querySelector('#user_message').value, 
         'username': username, 'room': room});
-        document.querySelector('#user_message').value = '';        
+        document.querySelector('#user_message').value = '';
     }
 
     document.querySelector('#fiveStar').onclick = () => {
-        console.log("5");
+        leaveRoom(room);
+        joinRoom(localStorage.room_id);
         socket.emit('rate', {'rating': 5 });
-        // have to figure out how to update the other user
+        window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#fourStar').onclick = () => {
+        leaveRoom(room);
+        joinRoom(localStorage.room_id);
         socket.emit('rate', {'rating': 4 });
+        window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#threeStar').onclick = () => {
+        leaveRoom(room);
+        joinRoom(localStorage.room_id);
         socket.emit('rate', {'rating': 3 });
+        window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#twoStar').onclick = () => {
+        leaveRoom(room);
+        joinRoom(localStorage.room_id);
         socket.emit('rate', {'rating': 2 });
+        window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#oneStar').onclick = () => {
+        leaveRoom(room);
+        joinRoom(localStorage.room_id);
         socket.emit('rate', {'rating': 1 });
+        window.location.replace("http://127.0.0.1:5000/");
     }
     
     function scrollDownChatWindow() {

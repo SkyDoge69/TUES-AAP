@@ -1,16 +1,16 @@
-document.addEventListener('DOMContentLoaded', () => {
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
+$( document ).ready(function() {
+        
+    var socket = io.connect();
 
-    const room = document.querySelector('#get-room').innerHTML;
-    const username = document.querySelector('#get-username').innerHTML;
-    const rating = document.querySelector('#get-rating').innerHTML;
+    var username = "{{ current_user.name }}";
+    var room_id = "{{ current_user.room_id }}";
+    var rating = "{{ current_user.rating }}";
 
-    socket.on('message', data => {
-        console.log(`Message recieved: ${data}`);
+    socket.on('connect', data => {
+        socket.emit('join', {'username': username, 'room': room_id});
     });
 
     socket.on('question_match', data => {
-        console.log("pi6 mi q6kata");
         var answer = window.confirm(data.question + "\nWould you like to answer that?");
         if (answer) {
             console.log(`You decided to answer this. ${data.room_id}`);
@@ -35,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
-            document.querySelector('#question').value = '';
+            document.querySelector('#question').value = ''; 
         }
-
+        
     }
 
     document.querySelector('#photography').onclick = () => {
@@ -49,9 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
-            document.querySelector('#question').value = '';
+            document.querySelector('#question').value = ''; 
         }
-
+        
     }
 
     document.querySelector('#model').onclick = () => {
@@ -63,21 +63,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
-            document.querySelector('#question').value = '';
+            document.querySelector('#question').value = ''; 
         }
-
+        
     }
-
 
     console.log(username);
     console.log(rating);
-    console.log(room);
+    console.log(room_id);
 
-    function removeElementsByClass(className){
-        var elements = document.getElementsByClassName(className);
-            while(elements.length > 0){
-                elements[0].parentNode.removeChild(elements[0]);
-            }
+    function doConfirm(data) {
+        var answer = window.confirm(data.question + "\nWould you like to answer that?");
+        if (answer) {
+            console.log(`You decided to answer this. ${data.room_id}`);
+            socket.emit('redirect_asker', data);
+            window.location.replace("http://127.0.0.1:5000/chat");
+        } else {
+            console.log('You dont want to.');
+        }
     }
-
 });

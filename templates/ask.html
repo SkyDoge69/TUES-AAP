@@ -29,6 +29,7 @@
 {% block script %}
 <script src="{{ url_for('static', filename='scripts/socketio.js') }}"></script>
     <script type="text/javascript">
+      localStorage.room_id = '{{ user.room_id }}';
       $( document ).ready(function() {
         var socket = io.connect();
 
