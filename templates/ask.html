@@ -27,14 +27,14 @@
 {% endblock %}
 
 {% block script %}
-<script src="{{ url_for('static', filename='scripts/ask.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/socketio.js') }}"></script>
     <script type="text/javascript">
       $( document ).ready(function() {
         var socket = io.connect();
 
         var username = "{{ current_user.name }}";
         var room_id = "{{ current_user.room_id }}";
-        var rating = {{ current_user.rating }};
+        var rating = "{{ current_user.rating }}";
 
         socket.on('connect', data => {
             socket.emit('join', {'username': username, 'room': room_id});
