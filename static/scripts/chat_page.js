@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
+    // window.onbeforeunload = function(){
+    //     console.log('closing shared worker port...');
+    //     return 'Take care now, bye-bye then.';
+    // };
+
     document.querySelector('#send_message').onclick = () => {
         socket.send({'msg': document.querySelector('#user_message').value, 
         'username': username, 'room': room});
