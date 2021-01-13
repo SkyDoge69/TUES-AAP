@@ -11,6 +11,8 @@
     <h2>AAP</h2>
     <h1 id="above_input">What is your question?</h1>
     <input type="text" id="question" placeholder="My question">
+    <h1 id="tags">Add question tags below (not neccessary)</h1>
+    <input type="text" id="tag" placeholder="Tags" data-role="tagsinput">
     <hr>
     <h1 id="above_choice">What is the question related to?</h1>
     <div class="button-section">
@@ -28,6 +30,7 @@
 
 {% block script %}
 <!-- <script src="{{ url_for('static', filename='scripts/socketio.js') }}"></script> -->
+
     <script type="text/javascript">
       localStorage.room_id = '{{ user.room_id }}';
       $( document ).ready(function() {
@@ -66,6 +69,7 @@
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
+            localStorage.question = document.querySelector('#question').value;
             document.querySelector('#question').value = ''; 
         }
         
@@ -80,6 +84,7 @@
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
+            localStorage.question = document.querySelector('#question').value;
             document.querySelector('#question').value = ''; 
         }
         
@@ -94,6 +99,7 @@
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
+            localStorage.question = document.querySelector('#question').value;
             document.querySelector('#question').value = ''; 
         }
         

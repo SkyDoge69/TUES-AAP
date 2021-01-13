@@ -128,9 +128,11 @@ def on_redirect_asker(data):
 
 @socketio.on('rate')
 def rate(data):
-    new_rating = (current_user.rating + int(data['rating']))/2
-    current_user.rating = new_rating
-    current_user.save()
+    print(str(data['room']))
+    user = User.find_by_room_id(current_user.name, str(data['room']))
+    new_rating = (user.rating + int(data['rating']))/2
+    user.rating = new_rating
+    user.save()
     print("znaeee6")
     # emit('question_match', {'question': data['question'], 'user_id': current_user.id,
     #                         'room_id': room_id}, room=chosenOne.room_id)

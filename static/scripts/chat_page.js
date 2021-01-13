@@ -4,8 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const username = document.querySelector('#get-username').innerHTML;
     //room = username.room_id ili ne6o takova
 
-    room = "Chat";
+    // let substring = Math.random().toString(36).substring(7);
+    room = "Chat"
     joinRoom(room);
+    // console.log(localStorage.question);
+    printSysMsg("Note: If you leave without leaving a rating, the user will be rated with 5 stars.");
 
     socket.on('message', data => {
         const p = document.createElement('p');
@@ -50,35 +53,35 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#fiveStar').onclick = () => {
         leaveRoom(room);
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 5 });
+        socket.emit('rate', {'rating': 5, 'room': room});
         window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#fourStar').onclick = () => {
         leaveRoom(room);
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 4 });
+        socket.emit('rate', {'rating': 4, 'room': room });
         window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#threeStar').onclick = () => {
         leaveRoom(room);
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 3 });
+        socket.emit('rate', {'rating': 3, 'room': room });
         window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#twoStar').onclick = () => {
         leaveRoom(room);
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 2 });
+        socket.emit('rate', {'rating': 2, 'room': room });
         window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#oneStar').onclick = () => {
         leaveRoom(room);
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 1 });
+        socket.emit('rate', {'rating': 1, 'room': room });
         window.location.replace("http://127.0.0.1:5000/");
     }
     
@@ -102,9 +105,5 @@ document.addEventListener('DOMContentLoaded', () => {
     function leaveRoom(room) {
         socket.emit('leave', {'username': username, 'room': room});
     }
-
-        
-    
-
 
 });

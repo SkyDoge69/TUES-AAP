@@ -86,6 +86,18 @@ class User(UserMixin):
         return User(*user)
 
     @staticmethod
+    def find_by_room_id(name, room_id):
+        result = None
+        with SQLite() as db:
+            result = db.execute(
+                    "SELECT name, password, choice, rating, room_id, id FROM user WHERE room_id = ? and name != ?",
+                    (room_id, name))
+        user = result.fetchone()
+        if user is None:
+            return None
+        return User(*user)
+
+    @staticmethod
     def find_closest_rating(choice, rating):
         print(choice)
         print(rating)
