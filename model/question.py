@@ -57,6 +57,12 @@ class Question(object):
             return None
         return Question(*question)
     
+    @staticmethod
+    def all_questions():
+        with SQLite() as db:
+            result = db.execute(
+                    "SELECT content FROM question").fetchall()                    
+            return [''.join(name) for name in result]
  
     @staticmethod
     def all():

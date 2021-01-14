@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollDownChatWindow();
     });
 
+    socket.on('disconnect', function() {
+        leaveRoom(room);
+        joinRoom(localStorage.room_id);
+    });
 
     // window.onbeforeunload = function(){
     //     console.log('closing shared worker port...');

@@ -63,14 +63,12 @@ def choice():
     else:
         return render_template("choice.html")
 
-
 @app.route("/ask", methods=["GET"])
 @login_required
 def ask():
     if current_user.choice == 'Hasn\'t chosen':
         return redirect(url_for('choice'))
     return render_template("ask.html", user = current_user)
-
 
 @app.route("/chat", methods=["GET", "POST"])
 def chat():
@@ -83,7 +81,6 @@ def join(data):
     print(data['username'])
     join_room(data['room'])
     User.update_room(str(data['room']), str(data['username']))
-    
 
 @socketio.on('leave')
 def leave(data):
@@ -96,12 +93,16 @@ def list_users():
         result.append(user.to_dict())
     return jsonify(result), 201
 
-@app.route("/archive", methods=["GET"])
+@app.route("/questions", methods=["GET"])
 def list_questions():
     result = []
     for question in Question.all():
         result.append(question.to_dict())
     return jsonify(result), 201
+
+@app.route("/archive", methods=["GET"])
+def archive():
+    return render_template("archive.html", questions = Question.all_questions())
 
 @socketio.on('message')
 def message(data):
@@ -110,14 +111,16 @@ def message(data):
 
 @socketio.on('match')
 def match(data):
-    chosenOne = User.find_closest_rating(data['choice'], data['rating'])
+    matchedUser = User.find_closest_rating(data['choice'], data['rating'])
     # TODO: Filter me!
     room_id = str(uuid.uuid4())
+    question = Question(data['question'], "", current_user.name)
+    question.save()
     print("NEW ROOM ID IS {}".format(room_id))
-    print("You are {}".format(chosenOne))
+    print("You are {}".format(matchedUser))
     print("I am {}".format(current_user))
     emit('question_match', {'question': data['question'], 'user_id': current_user.id,
-                            'room_id': room_id}, room=chosenOne.room_id)
+                            'room_id': room_id}, room=matchedUser.room_id)
 
 @socketio.on('redirect_asker')
 def on_redirect_asker(data):
