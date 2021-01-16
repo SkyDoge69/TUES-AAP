@@ -3,17 +3,14 @@ from errors import ApplicationError
 
 class Question(object):
  
-    def __init__(self, content, answer, user, question_id=None):
+    def __init__(self, content, answer, user, category, question_id=None):
         self.id = question_id
         self.content = content
         self.answer = answer
         self.user = user
+        self.category = category
  
     def to_dict(self):
-        question_data = self.__dict__
-        return question_data
-
-    def to_viewable(self):
         question_data = self.__dict__
         return question_data
  
@@ -37,7 +34,7 @@ class Question(object):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT content, answer, user, id FROM question WHERE id = ?",
+                    "SELECT content, answer, user, category, id FROM question WHERE id = ?",
                     (question_id,))
         question = result.fetchone()
         if question is None:
@@ -50,7 +47,7 @@ class Question(object):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT content, answer, user, id FROM question WHERE user = ?",
+                    "SELECT content, answer, user, category, id FROM question WHERE user = ?",
                     (user,))
         question = result.fetchone()
         if question is None:
@@ -61,22 +58,30 @@ class Question(object):
     def all_questions():
         with SQLite() as db:
             result = db.execute(
-                    "SELECT content FROM question").fetchall()                    
-            return [''.join(name) for name in result]
+                    "SELECT content, answer, user, category FROM question").fetchall()                    
+            return [' | '.join(name) for name in result]
+
+    @staticmethod
+    def all_questions_by_category(category):
+        with SQLite() as db:
+            result = db.execute(
+                    "SELECT content, answer, user, category FROM question WHERE category = ?",
+                    (category,)).fetchall()                   
+            return [' | '.join(name) for name in result]
  
     @staticmethod
     def all():
         with SQLite() as db:
             result = db.execute(
-                    "SELECT content, answer, user, id FROM question").fetchall()
+                    "SELECT content, answer, user, category, id FROM question").fetchall()
             return [Question(*row) for row in result]
  
     def __get_save_query(self):
         query = "{} INTO question {} VALUES {}"
         if self.id == None:
-            args = (self.content, self.answer, self.user)
-            query = query.format("INSERT", "(content, answer, user)", args)
+            args = (self.content, self.answer, self.user, self.category)
+            query = query.format("INSERT", "(content, answer, user, category)", args)
         else:
-            args = (self.id, self.content, self.answer, self.user)
-            query = query.format("REPLACE", "(id, content, answer, user)", args)
+            args = (self.id, self.content, self.answer, self.user, self.category)
+            query = query.format("REPLACE", "(id, content, answer, user, category)", args)
         return query

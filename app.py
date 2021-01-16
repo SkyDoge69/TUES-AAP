@@ -114,7 +114,7 @@ def match(data):
     matchedUser = User.find_closest_rating(data['choice'], data['rating'])
     # TODO: Filter me!
     room_id = str(uuid.uuid4())
-    question = Question(data['question'], "", current_user.name)
+    question = Question(data['question'], "", current_user.name, data['choice'])
     question.save()
     print("NEW ROOM ID IS {}".format(room_id))
     print("You are {}".format(matchedUser))

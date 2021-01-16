@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS question
         content TEXT NOT NULL,
         answer TEXT NOT NULL,
         user TEXT NOT NULL,
+        category TEXT NOT NULL,
         FOREIGN KEY(user) REFERENCES user(name)
     )
 ''')

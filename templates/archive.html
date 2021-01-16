@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %} Archive {% endblock  %}
+
+{% block style %}
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/archive.css') }}"> -->
+{% endblock %}
+
+{% block content %}
+  <br><br>
+  <h2>Questions archive</h2>
+  <ul>
+    {% for question in questions %}
+    <li class="select-question">{{ question }}</li>
+    {% endfor %}
+  </ul>
+  <div class="button-section">
+    <h2>Sort by category</h2>
+    <button type="button" class="btn btn-danger" id="acting">Acting</button>
+    <button type="button" class="btn btn-warning" id="photography">Photography</button>
+    <button type="button" class="btn btn-dark" id="model">Model</button>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <!-- <script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='scripts/archive.js') }}"></script> -->
+{% endblock %}
