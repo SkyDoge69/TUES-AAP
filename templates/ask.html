@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %} Ask {% endblock  %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/ask.css') }}">
+{% endblock %}
+
+{% block content %}
+  <div class="main-section">
+    <h2>AAP</h2>
+    <h1 id="above_input">What is your question?</h1>
+    <input type="text" id="question" placeholder="My question">
+    <h1 id="tags">Add question tags below (not neccessary)</h1>
+    <input type="text" id="tag" placeholder="Tags" data-role="tagsinput">
+    <hr>
+    <h1 id="above_choice">What is the question related to?</h1>
+    <div class="button-section">
+      <button type="button" class="btn btn-danger" id="acting">Acting</button>
+      <button type="button" class="btn btn-warning" id="photography">Photography</button>
+      <button type="button" class="btn btn-dark" id="model">Model</button>
+    </div>
+  </div>
+
+  <div id="display_stuff">
+
+  </div>
+
+{% endblock %}
+
+{% block script %}
+<!-- <script src="{{ url_for('static', filename='scripts/socketio.js') }}"></script> -->
+
+    <script type="text/javascript">
+      localStorage.room_id = '{{ user.room_id }}';
+      $( document ).ready(function() {
+        var socket = io.connect();
+
+        var username = '{{ user.name }}';
+        var room_id = '{{ user.room_id }}';
+        var rating = '{{ user.rating }}';
+
+        socket.on('connect', data => {
+            socket.emit('join', {'username': username, 'room': room_id});
+        });
+
+        socket.on('question_match', data => {
+            var answer = window.confirm(data.question + "\nWould you like to answer that?");
+            if (answer) {
+                console.log(`You decided to answer this. ${data.room_id}`);
+                socket.emit('redirect_asker', data);
+                window.location.replace("http://127.0.0.1:5000/chat");
+            } else {
+                console.log('You dont want to.');
+            }
+        });
+
+        socket.on('redirect', data => {
+            window.location.replace("http://127.0.0.1:5000/chat");
+        });
+
+
+    document.querySelector('#acting').onclick = () => {
+        if (document.querySelector('#question').value == "") {
+            console.log("You must input question!");
+        } else {
+            socket.emit('match', {
+                'choice': "Acting",
+                'rating': rating,
+                'question': document.querySelector('#question').value
+            });
+            localStorage.question = document.querySelector('#question').value;
+            document.querySelector('#question').value = ''; 
+        }
+        
+    }
+
+    document.querySelector('#photography').onclick = () => {
+        if (document.querySelector('#question').value == "") {
+            console.log("You must input question!");
+        } else {
+            socket.emit('match', {
+                'choice': "Photography",
+                'rating': rating,
+                'question': document.querySelector('#question').value
+            });
+            localStorage.question = document.querySelector('#question').value;
+            document.querySelector('#question').value = ''; 
+        }
+        
+    }
+
+    document.querySelector('#model').onclick = () => {
+        if (document.querySelector('#question').value == "") {
+            console.log("You must input question!");
+        } else {
+            socket.emit('match', {
+                'choice': "Model",
+                'rating': rating,
+                'question': document.querySelector('#question').value
+            });
+            localStorage.question = document.querySelector('#question').value;
+            document.querySelector('#question').value = ''; 
+        }
+        
+    }
+
+    console.log(username);
+    console.log(rating);
+    console.log(room_id);
+      });
+    </script>
+{% endblock %}

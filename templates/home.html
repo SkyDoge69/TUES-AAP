@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %} Login {% endblock  %}
+
+{% block style %}
+    <link href="{{ url_for('static', filename='styles/home.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-lg-12">
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner" role="listbox">
+          <div class="carousel-item active" style="background-image: url('../static/images/bg.jpg')">
+            <div class="carousel-caption d-none d-md-block">
+              <h3>AAP</h3>
+              <p>Exchange information with everyone.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <h1 class="my-4">Welcome to AAP</h1>
+  <div class="row">
+    <div class="col-lg-4 col-sm-6 portfolio-item">
+      <div class="card h-100">
+        <a href="#"><img class="card-img-top" src="https://windowsnode.com/wp-content/uploads/2020/06/Change-Default-User-Account-Avatar-Windows-10.png" alt=""></a>
+        <div class="card-body">
+          <h4 class="card-title">
+            <a href="http://127.0.0.1:5000/register">Register</a>
+          </h4>
+          <p class="card-text">If you're interested in stuff, and want to learn more everyday - stop waiting and start exploring.</p>
+        </div>
+      </div>
+      </div>
+    <div class="col-lg-4 col-sm-6 portfolio-item">
+      <div class="card h-100">
+        <a href="http://127.0.0.1:5000/login"><img class="card-img-top" src="https://english.cdn.zeenews.com/sites/default/files/styles/zm_700x400/public/2014/12/08/300210-stars-4.jpg" alt=""></a>
+        <div class="card-body">
+          <h4 class="card-title">
+            <a href="#">Login</a>
+          </h4>
+          <p class="card-text">Welcome back, good to see you! Come in and start dreaming.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6 portfolio-item">
+      <div class="card h-100">
+        <a href="#"><img class="card-img-top" src="https://www.apparelviews.com/wp-content/uploads/2019/09/Huntsman-introduces.jpg" alt=""></a>
+        <div class="card-body">
+          <h4 class="card-title">
+            <a href="#">Future plans</a>
+          </h4>
+          <p class="card-text">We plan on finishing this, getting our certificate and going to USA. We'll see tho.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
