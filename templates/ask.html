@@ -4,6 +4,7 @@
 
 {% block style %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/ask.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/tagsinput.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -11,9 +12,14 @@
     <h2>AAP</h2>
     <h1 id="above_input">What is your question?</h1>
     <input type="text" id="question" placeholder="My question">
-    <h1 id="tags">Add question tags below (not neccessary)</h1>
-    <input type="text" id="tag" placeholder="Tags" data-role="tagsinput">
-    <hr>
+    <div class="container">
+        <br />
+        <br />
+        <div class="tag-container">
+            <input/>  
+        </div>        
+    </div>
+    
     <h1 id="above_choice">What is the question related to?</h1>
     <div class="button-section">
       <button type="button" class="btn btn-danger" id="acting">Acting</button>
@@ -29,11 +35,66 @@
 {% endblock %}
 
 {% block script %}
-<!-- <script src="{{ url_for('static', filename='scripts/socketio.js') }}"></script> -->
+
+<script src="{{url_for('static', filename='scripts/tagsinput.js')}}"></script>
 
     <script type="text/javascript">
-      localStorage.room_id = '{{ user.room_id }}';
-      $( document ).ready(function() {
+    
+        const tagContainer = document.querySelector('.tag-container');
+        const input = document.querySelector('.tag-container input');
+        let tags = [];
+
+        function createTag(label) {
+            const div = document.createElement('div');
+            div.setAttribute('class', 'tag');
+            const span = document.createElement('span');
+            span.innerHTML = label;
+            const closeIcon = document.createElement('i');
+            closeIcon.innerHTML = 'close';
+            closeIcon.setAttribute('class', 'material-icons');
+            closeIcon.setAttribute('data-item', label);
+            div.appendChild(span);
+            div.appendChild(closeIcon);
+            return div;
+        }
+
+        function clearTags() {
+            document.querySelectorAll('.tag').forEach(tag => {
+                tag.parentElement.removeChild(tag);
+            });
+        }
+
+        function addTags() {
+            clearTags();
+            tags.slice().reverse().forEach(tag => {
+                tagContainer.prepend(createTag(tag));
+            });
+        }
+
+        input.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                e.target.value.split(',').forEach(tag => {
+                    tags.push(tag);  
+                });
+                addTags();
+                input.value = '';
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'I') {
+                const tagLabel = e.target.getAttribute('data-item');
+                const index = tags.indexOf(tagLabel);
+                tags = [...tags.slice(0, index), ...tags.slice(index+1)];
+                addTags();    
+            }
+        })
+
+
+        input.focus();
+
+        localStorage.room_id = '{{ user.room_id }}';
+        $( document ).ready(function() {
         var socket = io.connect();
 
         var username = '{{ user.name }}';
@@ -69,6 +130,7 @@
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
+            console.log(tags);
             localStorage.question = document.querySelector('#question').value;
             document.querySelector('#question').value = ''; 
         }
@@ -84,6 +146,7 @@
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
+            console.log(tags);
             localStorage.question = document.querySelector('#question').value;
             document.querySelector('#question').value = ''; 
         }
@@ -99,6 +162,7 @@
                 'rating': rating,
                 'question': document.querySelector('#question').value
             });
+            console.log(tags);
             localStorage.question = document.querySelector('#question').value;
             document.querySelector('#question').value = ''; 
         }
