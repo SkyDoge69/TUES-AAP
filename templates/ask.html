@@ -128,7 +128,8 @@
             socket.emit('match', {
                 'choice': "Acting",
                 'rating': rating,
-                'question': document.querySelector('#question').value
+                'question': document.querySelector('#question').value,
+                'tags': tags
             });
             console.log(tags);
             localStorage.question = document.querySelector('#question').value;

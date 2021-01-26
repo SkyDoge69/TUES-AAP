@@ -8,6 +8,7 @@ from errors import register_error_handlers
 from login import login_manager
 from model.user import User
 from model.question import Question
+from model.tag import Tag
 import uuid
 
 app = Flask(__name__)
@@ -100,6 +101,13 @@ def list_questions():
         result.append(question.to_dict())
     return jsonify(result), 201
 
+@app.route("/tags", methods=["GET"])
+def list_tags():
+    result = []
+    for tag in Tag.all():
+        result.append(tag.to_dict())
+    return jsonify(result), 201
+
 @app.route("/archive", methods=["GET"])
 def archive():
     return render_template("archive.html", questions = Question.all_questions())
@@ -116,6 +124,10 @@ def match(data):
     room_id = str(uuid.uuid4())
     question = Question(data['question'], "", current_user.name, data['choice'])
     question.save()
+    for value in data['tags']:
+        new_tag = Tag(value, question.id)
+        new_tag.save()
+    
     print("NEW ROOM ID IS {}".format(room_id))
     print("You are {}".format(matchedUser))
     print("I am {}".format(current_user))
