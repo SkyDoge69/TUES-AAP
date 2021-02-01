@@ -53,6 +53,18 @@ class Question(object):
         if question is None:
             return None
         return Question(*question)
+
+    @staticmethod
+    def find_by_tag(question_id):
+        result = None
+        with SQLite() as db:
+            result = db.execute(
+                    "SELECT content, answer, user, category, id FROM question WHERE id = ?",
+                    (question_id,))
+        question = result.fetchone()
+        if question is None:
+            return "No such tag"
+        return Question(*question)
     
     @staticmethod
     def all_questions():

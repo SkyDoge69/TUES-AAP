@@ -30,6 +30,17 @@ CREATE TABLE IF NOT EXISTS question
 ''')
 conn.commit()
 
+conn.cursor().execute('''
+CREATE TABLE IF NOT EXISTS tag
+    (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        content TEXT NOT NULL,
+        question_id INTEGER,
+        FOREIGN KEY(question_id) REFERENCES question(id)
+    )
+''')
+conn.commit()
+
 
 class SQLite(object):
 

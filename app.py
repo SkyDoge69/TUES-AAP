@@ -152,6 +152,15 @@ def rate(data):
     # emit('question_match', {'question': data['question'], 'user_id': current_user.id,
     #                         'room_id': room_id}, room=chosenOne.room_id)
 
+@socketio.on('sort')
+def rate(data):
+    questions = []
+    for tag in data['tags']:
+        print(tag)
+        newTag = Tag.find_by_content(tag)
+        questions.append(Question.find_by_tag(newTag.question_id))
+    emit('sort', {'questions': questions})
+        
 
 def send_message(content, username, room):
     current_time = strftime('%b-%d %I:%M%p', localtime())

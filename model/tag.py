@@ -39,6 +39,18 @@ class Tag(object):
             raise ApplicationError(
                     "Tag with id {} not found".format(tag_id), 404)
         return Tag(*tag)
+    
+    @staticmethod
+    def find_by_content(content):
+        result = None
+        with SQLite() as db:
+            result = db.execute(
+                    "SELECT content, question_id, id FROM tag WHERE content = ?",
+                    (content,))
+        tag = result.fetchone()
+        if tag is None:
+            return "No such tag found"
+        return Tag(*tag)
 
     @staticmethod
     def find_by_question(question_id):
