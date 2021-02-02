@@ -10,15 +10,21 @@
 {% block content %}
   <div class="main-section">
     <h2>AAP</h2>
-    <h1 id="above_input">What is your question?</h1>
-    <input type="text" id="question" placeholder="My question">
+    <div class="input" style="text-align: center;">
+        <h1 id="above_input">What is your question?</h1>
+        <input type="text" id="question" placeholder="My question">
+    </div>
+    
+    <hr>
+
     <div class="container">
-        <br />
-        <br />
+        <h1>Add some tags</h1>
         <div class="tag-container">
             <input/>  
         </div>        
     </div>
+
+    <hr>
     
     <h1 id="above_choice">What is the question related to?</h1>
     <div class="button-section">
@@ -27,9 +33,16 @@
       <button type="button" class="btn btn-dark" id="model">Model</button>
     </div>
   </div>
-
-  <div id="display_stuff">
-
+  
+  <hr>
+  
+  <div id="previous-questions">
+    <h1>Previous questions</h1>
+    <ul id="prev">
+        {% for question in questions %}
+        <li class="select-question">{{ question }}</li>
+        {% endfor %}
+      </ul>
   </div>
 
 {% endblock %}

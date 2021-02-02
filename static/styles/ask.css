@@ -66,8 +66,14 @@
 
 h1 {
     text-align: center;
+    font-size:33px;
 }
 
 #question {
+    margin: 0 auto;
+}
+
+#prev {
+    display: table;
     margin: 0 auto;
 }

@@ -47,12 +47,9 @@ class Question(object):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT content, answer, user, category, id FROM question WHERE user = ?",
-                    (user,))
-        question = result.fetchone()
-        if question is None:
-            return None
-        return Question(*question)
+                    "SELECT content, answer FROM question WHERE user = ?",
+                    (user,)).fetchall()
+        return [' | '.join(name) for name in result]
 
     @staticmethod
     def find_by_tag(question_id):

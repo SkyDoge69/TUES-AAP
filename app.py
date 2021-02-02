@@ -58,7 +58,6 @@ def choice():
         return redirect(url_for('home'))
     if request.method == "POST":
         category = request.form["category"]
-        # TODO: Validate category
         current_user.update_choice(category)
         return redirect(url_for("ask"))
     else:
@@ -67,9 +66,10 @@ def choice():
 @app.route("/ask", methods=["GET"])
 @login_required
 def ask():
+    print(current_user.name)
     if current_user.choice == 'Hasn\'t chosen':
         return redirect(url_for('choice'))
-    return render_template("ask.html", user = current_user)
+    return render_template("ask.html", user = current_user, questions = Question.find_by_user(current_user.name))
 
 @app.route("/chat", methods=["GET", "POST"])
 def chat():
