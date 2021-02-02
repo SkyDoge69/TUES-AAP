@@ -38,12 +38,15 @@
   
   <div id="previous-questions">
     <h1>Previous questions</h1>
-    <ul id="prev">
-        {% for question in questions %}
-        <li class="select-question">{{ question }}</li>
-        {% endfor %}
-      </ul>
+    <nav>
+        <ul id="prev">
+            {% for question in questions %}
+            <li class="select-question">{{ question }}</li>
+            {% endfor %}
+        </ul>
+    </nav>
   </div>
+  
 
 {% endblock %}
 
