@@ -73,11 +73,11 @@ def ask():
 
 @app.route("/chat", methods=["GET", "POST"])
 def chat():
-    return render_template("chat.html", username=current_user.name, room_id = current_user.room_id)
+    return render_template("chat.html", user = current_user)
 
 @socketio.on('join')
 def join(data):
-    print("EYOOOO\n")
+    print("Someone joined a room!!!\n")
     print(data['room'])
     print(data['username'])
     join_room(data['room'])
@@ -85,6 +85,9 @@ def join(data):
 
 @socketio.on('leave')
 def leave(data):
+    print("Someone left a room!!!\n")
+    print(data['room'])
+    print(data['username'])
     leave_room(data['room'])
 
 @app.route("/users", methods=["GET"])
@@ -124,9 +127,10 @@ def match(data):
     room_id = str(uuid.uuid4())
     question = Question(data['question'], "", current_user.name, data['choice'])
     question.save()
-    for value in data['tags']:
-        new_tag = Tag(value, question.id)
-        new_tag.save()
+    #fix if tags is none
+    # for value in data['tags']:
+    #     new_tag = Tag(value, question.id)
+    #     new_tag.save()
     
     print("NEW ROOM ID IS {}".format(room_id))
     print("You are {}".format(matchedUser))
@@ -143,8 +147,10 @@ def on_redirect_asker(data):
 
 @socketio.on('rate')
 def rate(data):
+    print("Rating, room is")
     print(str(data['room']))
-    user = User.find_by_room_id(current_user.name, str(data['room']))
+    user = User.find_by_room_id("Chat")
+    print(user.name)
     new_rating = (user.rating + int(data['rating']))/2
     user.rating = new_rating
     user.save()

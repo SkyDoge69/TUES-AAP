@@ -4,7 +4,6 @@
 
 {% block style %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/ask.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/tagsinput.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -51,9 +50,6 @@
 {% endblock %}
 
 {% block script %}
-
-<script src="{{url_for('static', filename='scripts/tagsinput.js')}}"></script>
-
     <script type="text/javascript">
     
         const tagContainer = document.querySelector('.tag-container');
@@ -110,6 +106,7 @@
         input.focus();
 
         localStorage.room_id = '{{ user.room_id }}';
+        console.log(localStorage.room_id);
         $( document ).ready(function() {
         var socket = io.connect();
 
@@ -122,6 +119,7 @@
         });
 
         socket.on('question_match', data => {
+            console.log("ivona e gei");
             var answer = window.confirm(data.question + "\nWould you like to answer that?");
             if (answer) {
                 console.log(`You decided to answer this. ${data.room_id}`);
