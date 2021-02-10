@@ -29,7 +29,7 @@ def register():
         username = register_form.username.data
         password = register_form.password.data
         sid = str(uuid.uuid1())
-        user = User(username, password, "Hasn't chosen", 5, sid)
+        user = User(username, password, "Hasn't chosen", 5, sid, "None")
         user.save()
         return redirect(url_for('choice'))
     return render_template("registration.html", form = register_form)
@@ -122,31 +122,36 @@ def message(data):
 
 @socketio.on('match')
 def match(data):
-    matchedUser = User.find_closest_rating(data['choice'], data['rating'])
+    matched_user = User.find_closest_rating(data['choice'], data['rating'])
     # TODO: Filter me!
-    room_id = str(uuid.uuid4())
     question = Question(data['question'], "", current_user.name, data['choice'])
     question.save()
     #fix if tags is none
     # for value in data['tags']:
     #     new_tag = Tag(value, question.id)
     #     new_tag.save()
-    
-    print("NEW ROOM ID IS {}".format(room_id))
-    print("You are {}".format(matchedUser))
+    chat_id = str(uuid.uuid1())
+    print("NEW CHAT ID IS {}".format(chat_id))
+    print("You are {}".format(matched_user))
     print("I am {}".format(current_user))
     emit('question_match', {'question': data['question'], 'user_id': current_user.id,
-                            'room_id': room_id}, room=matchedUser.room_id)
+                            'matched_user_id': matched_user.id, 'chat_id': chat_id}, room=matched_user.room_id)
 
 @socketio.on('redirect_asker')
 def on_redirect_asker(data):
     print("CURRENT USER ON REDIRECT_ASKER {}".format(current_user.id))
     print("DATA IS {}".format(data))
-    user = User.find(int(data['user_id']))
-    emit('redirect', {'question': data['question'], 'room_id': data['room_id']}, room = user.room_id)
+    asking_user = User.find(int(data['user_id']))
+    answering_user = User.find(int(data['matched_user_id']))
+    print("ASKING IS {}, ANSWERING IS {}".format(asking_user.name, answering_user.name))
+    #put both users in same chat_room
+    User.update_chat_id(str(data['chat_id']), asking_user.name)
+    User.update_chat_id(str(data['chat_id']), answering_user.name)
+    emit('redirect', {'question': data['question'], 'chat_id': data['chat_id']}, room = asking_user.room_id)
 
 @socketio.on('rate')
 def rate(data):
+    #FIX FIX FIX FIX FIX IFX IFX
     print("Rating, room is")
     print(str(data['room']))
     user = User.find_by_room_id("Chat")

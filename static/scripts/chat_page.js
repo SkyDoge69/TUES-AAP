@@ -57,36 +57,36 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#fiveStar').onclick = () => {
         leaveRoom(room);
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 5, 'room': localStorage.room_id});
-        // window.location.replace("http://127.0.0.1:5000/");
+        socket.emit('rate', {'rating': 5, 'room': room});
+        window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#fourStar').onclick = () => {
         leaveRoom(room);
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 4, 'room': localStorage.room_id});
-        // window.location.replace("http://127.0.0.1:5000/ask");
+        socket.emit('rate', {'rating': 4, 'room': room });
+        window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#threeStar').onclick = () => {
         leaveRoom(room);
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 3, 'room': localStorage.room_id});
-        // window.location.replace("http://127.0.0.1:5000/ask");
+        socket.emit('rate', {'rating': 3, 'room': room });
+        window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#twoStar').onclick = () => {
         leaveRoom(room);
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 2, 'room': localStorage.room_id});
-        // window.location.replace("http://127.0.0.1:5000/");
+        socket.emit('rate', {'rating': 2, 'room': room });
+        window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#oneStar').onclick = () => {
         leaveRoom(room);
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 1, 'room': localStorage.room_id});
-        // window.location.replace("http://127.0.0.1:5000/ask");
+        socket.emit('rate', {'rating': 1, 'room': room });
+        window.location.replace("http://127.0.0.1:5000/");
     }
     
     function scrollDownChatWindow() {

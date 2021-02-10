@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS user
         password TEXT NOT NULL,
         choice TEXT NOT NULL,
         rating DOUBLE,
-        room_id TEXT NOT NULL
+        room_id TEXT NOT NULL,
+        chat_id TEXT NOT NULL
     )
 ''')
 conn.commit()
