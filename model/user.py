@@ -4,7 +4,7 @@ from flask_login import UserMixin
 
 class User(UserMixin):
 
-    def __init__(self, name, password, choice, rating, room_id, chat_id, user_id=None):
+    def __init__(self, name, password, choice, rating, room_id, chat_id, match, user_id=None):
         self.id = user_id
         self.name = name
         self.password = password
@@ -12,6 +12,7 @@ class User(UserMixin):
         self.rating = rating
         self.room_id = room_id
         self.chat_id = chat_id
+        self.match = match
 
     def to_dict(self):
         user_data = self.__dict__
@@ -60,6 +61,14 @@ class User(UserMixin):
         if result.rowcount == 0:
             raise ApplicationError("No user present", 404)
 
+    def update_match(match, name):
+        result = None
+        with SQLite() as db:
+            result = db.execute("UPDATE user SET match = ? WHERE name = ?",
+                    (match, name))
+        if result.rowcount == 0:
+            raise ApplicationError("No user present", 404)
+
     @staticmethod
     def delete(user_id):
         result = None
@@ -74,7 +83,7 @@ class User(UserMixin):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT name, password, choice, rating, room_id, chat_id, id FROM user WHERE id = ?",
+                    "SELECT name, password, choice, rating, room_id, chat_id, match, id FROM user WHERE id = ?",
                     (user_id,))
         user = result.fetchone()
         if user is None:
@@ -87,7 +96,7 @@ class User(UserMixin):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT name, password, choice, rating, room_id, chat_id, id FROM user WHERE name = ?",
+                    "SELECT name, password, choice, rating, room_id, chat_id, match, id FROM user WHERE name = ?",
                     (name,))
         user = result.fetchone()
         if user is None:
@@ -99,7 +108,7 @@ class User(UserMixin):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT name, password, choice, rating, room_id, chat_id, id FROM user WHERE room_id = ?",
+                    "SELECT name, password, choice, rating, room_id, chat_id, match, id FROM user WHERE room_id = ?",
                     (room_id,))
         user = result.fetchone()
         if user is None:
@@ -113,7 +122,7 @@ class User(UserMixin):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    """SELECT name, password, choice, rating, room_id, chat_id, id
+                    """SELECT name, password, choice, rating, room_id, chat_id, match, id
                      FROM user WHERE choice = ? ORDER BY ABS(? - rating) LIMIT 1""",
                     (choice, rating))
         user = result.fetchone()
@@ -136,15 +145,15 @@ class User(UserMixin):
     def all():
         with SQLite() as db:
             result = db.execute(
-                    "SELECT name, password, choice, rating, room_id, chat_id, id FROM user").fetchall()
+                    "SELECT name, password, choice, rating, room_id, chat_id, match, id FROM user").fetchall()
             return [User(*row) for row in result]
 
     def __get_save_query(self):
         query = "{} INTO user {} VALUES {}"
         if self.id == None:
-            args = (self.name, self.password, self.choice, self.rating, self.room_id, self.chat_id)
-            query = query.format("INSERT", "(name, password, choice, rating, room_id, chat_id)", args)
+            args = (self.name, self.password, self.choice, self.rating, self.room_id, self.chat_id, self.match)
+            query = query.format("INSERT", "(name, password, choice, rating, room_id, chat_id, match)", args)
         else:
-            args = (self.id, self.name, self.password, self.choice, self.rating, self.room_id, self.chat_id)
-            query = query.format("REPLACE", "(id, name, password, choice, rating, room_id, chat_id)", args)
+            args = (self.id, self.name, self.password, self.choice, self.rating, self.room_id, self.chat_id, self.match)
+            query = query.format("REPLACE", "(id, name, password, choice, rating, room_id, chat_id, match)", args)
         return query

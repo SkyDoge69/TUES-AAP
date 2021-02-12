@@ -3,8 +3,6 @@
 <div>
     {{ fieldName(class='form-control',
       placeholder=placeholderValue, **kwargs)}}  
-      <!-- kwargs - keyword args -->
-    <!-- Error messages -->
     <ul>
     {% for error in fieldName.errors %}
         <li>{{ error }}</li>

@@ -50,6 +50,7 @@
 {% endblock %}
 
 {% block script %}
+    
     <script type="text/javascript">
     
         const tagContainer = document.querySelector('.tag-container');
@@ -131,6 +132,7 @@
         });
 
         socket.on('redirect', data => {
+            localStorage.chat_id = '{{ user.chat_id }}';
             window.location.replace("http://127.0.0.1:5000/chat");
         });
 
@@ -189,4 +191,5 @@
     console.log(room_id);
       });
     </script>
+    <script src="{{ url_for('static', filename='scripts/chat_page.js') }}"></script>
 {% endblock %}

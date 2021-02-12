@@ -2,10 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
     var socket = io.connect('http://' + document.domain + ':' + location.port);  
 
     const username = document.querySelector('#get-username').innerHTML;
-    //room = username.room_id ili ne6o takova
-
+    
+    console.log(localStorage.room_id)
+    console.log(localStorage.chat_id)
     // let substring = Math.random().toString(36).substring(7);
-    room = "Chat"
+    room = localStorage.chat_id;
     joinRoom(room);
     // console.log(localStorage.question);
     printSysMsg("Note: If you leave without leaving a rating, the user will be rated with 5 stars.");

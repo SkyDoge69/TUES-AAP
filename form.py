@@ -15,7 +15,6 @@ def invalid_credentials(form, field):
         raise ValidationError("Wrong credentials!")
 
 class RegistrationForm(FlaskForm):
-    """ Registration form """
     username = StringField('username_label', validators=[InputRequired(message="Username required"), 
     Length(min=4, max=25, 
     message="Username must be between 4 and 25 characters!")])
