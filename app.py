@@ -75,13 +75,19 @@ def ask():
 def chat():
     return render_template("chat.html", user = current_user)
 
+# @socketio.on('join_chat')
+# def join(data):
+#     print("Someone joined a room!!!\n")
+#     print(data['room'])
+#     print(data['username'])
+#     join_room(data['room'])
+
 @socketio.on('join')
 def join(data):
     print("Someone joined a room!!!\n")
     print(data['room'])
     print(data['username'])
     join_room(data['room'])
-    User.update_room(str(data['room']), str(data['username']))
 
 @socketio.on('leave')
 def leave(data):
@@ -89,6 +95,7 @@ def leave(data):
     print(data['room'])
     print(data['username'])
     leave_room(data['room'])
+    User.update_match("", str(data['username']))
 
 @app.route("/users", methods=["GET"])
 def list_users():
@@ -127,10 +134,10 @@ def match(data):
     question = Question(data['question'], "", current_user.name, data['choice'])
     question.save()
     
-    for value in data['tags']:
-        print(value)
-        new_tag = Tag(value, question.id)
-        new_tag.save()
+    # for value in data['tags']:
+    #     print(value)
+    #     new_tag = Tag(value, question.id)
+    #     new_tag.save()
     
     chat_id = str(uuid.uuid1())
     print("NEW CHAT ID IS {}".format(chat_id))

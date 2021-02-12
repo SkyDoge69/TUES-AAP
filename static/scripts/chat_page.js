@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     console.log(localStorage.room_id)
     console.log(localStorage.chat_id)
-    // let substring = Math.random().toString(36).substring(7);
+
     room = localStorage.chat_id;
     joinRoom(room);
-    // console.log(localStorage.question);
+    
     printSysMsg("Note: If you leave without leaving a rating, the user will be rated with 5 stars.");
 
     socket.on('message', data => {
@@ -102,6 +102,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#display-message-section').append(p);
         document.querySelector("#user_message").focus();
     }
+
+    // function joinChat(room) {
+    //     socket.emit('join_chat', {'username': username, 'room': room});
+    // }
 
     function joinRoom(room) {
         socket.emit('join', {'username': username, 'room': room});
