@@ -50,16 +50,20 @@ def logout():
     flash('You have successfully logged yourself out.')
     return redirect(url_for('home'))
 
+
 @app.route("/choice", methods=["GET", "POST"])
 @login_required
 def choice():
+    #check if user has already chosen a category
     if current_user.choice != 'Hasn\'t chosen':
         flash('You have already chosen a category')
         return redirect(url_for('home'))
+    #check if a category has been selected (hence POST)
     if request.method == "POST":
         category = request.form["category"]
         current_user.update_choice(category)
         return redirect(url_for("ask"))
+    #if not
     else:
         return render_template("choice.html")
 
@@ -75,19 +79,19 @@ def ask():
 def chat():
     return render_template("chat.html", user = current_user)
 
-# @socketio.on('join_chat')
+
+@socketio.on('join_chat')
+def join_chat(data):
+    user = User.find_by_name(data['username'])
+    join_room(user.chat_id)
+    emit("joined", {'chat_id': user.chat_id}, room=user.room_id)
+
+# @socketio.on('join')
 # def join(data):
 #     print("Someone joined a room!!!\n")
 #     print(data['room'])
 #     print(data['username'])
 #     join_room(data['room'])
-
-@socketio.on('join')
-def join(data):
-    print("Someone joined a room!!!\n")
-    print(data['room'])
-    print(data['username'])
-    join_room(data['room'])
 
 @socketio.on('leave')
 def leave(data):
@@ -141,8 +145,8 @@ def match(data):
     
     chat_id = str(uuid.uuid1())
     print("NEW CHAT ID IS {}".format(chat_id))
-    print("You are {}".format(matched_user))
-    print("I am {}".format(current_user))
+    print("You are {}".format(matched_user.name))
+    print("I am {}".format(current_user.name))
     emit('question_match', {'question': data['question'], 'user_id': current_user.id,
          'matched_user_id': matched_user.id, 'chat_id': chat_id}, room=matched_user.room_id)
 
@@ -182,12 +186,14 @@ def rate(data):
     #                         'room_id': room_id}, room=chosenOne.room_id)
 
 @socketio.on('sort')
-def rate(data):
+def sort(data):
     questions = []
     for tag in data['tags']:
-        print(tag)
+        #find the tag 
         newTag = Tag.find_by_content(tag)
+        #add question that contains the tag to the list
         questions.append(Question.find_by_tag(newTag.question_id))
+    #emit to function that displays questions containing tag
     emit('sort', {'questions': questions})
         
 

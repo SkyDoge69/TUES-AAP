@@ -107,7 +107,6 @@
         input.focus();
 
         localStorage.room_id = '{{ user.room_id }}';
-        console.log(localStorage.room_id);
         $( document ).ready(function() {
         var socket = io.connect();
 
@@ -119,13 +118,17 @@
             socket.emit('join', {'username': username, 'room': room_id});
         });
 
+        
         socket.on('question_match', data => {
-            console.log("ivona e gei");
-            var answer = window.confirm(data.question + "\nWould you like to answer that?");
+            //create a confirm box, that displays the question
+            console.log("molq");
+            var answer = window.confirm("\"" + data.question + "\"" + "\nWould you like to answer that?");
+            //if user wants to answer, redirect both users to a chat room
             if (answer) {
                 console.log(`You decided to answer this. ${data.room_id}`);
                 socket.emit('redirect_asker', data);
                 window.location.replace("http://127.0.0.1:5000/chat");
+            //if not, nothing happens
             } else {
                 console.log('You dont want to.');
             }
@@ -151,7 +154,6 @@
             localStorage.question = document.querySelector('#question').value;
             document.querySelector('#question').value = ''; 
         }
-        
     }
 
     document.querySelector('#photography').onclick = () => {
@@ -167,7 +169,6 @@
             localStorage.question = document.querySelector('#question').value;
             document.querySelector('#question').value = ''; 
         }
-        
     }
 
     document.querySelector('#model').onclick = () => {
@@ -183,7 +184,6 @@
             localStorage.question = document.querySelector('#question').value;
             document.querySelector('#question').value = ''; 
         }
-        
     }
 
     console.log(username);
@@ -191,5 +191,5 @@
     console.log(room_id);
       });
     </script>
-    <script src="{{ url_for('static', filename='scripts/chat_page.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='scripts/chat_page.js') }}"></script> -->
 {% endblock %}

@@ -15,18 +15,22 @@ def invalid_credentials(form, field):
         raise ValidationError("Wrong credentials!")
 
 class RegistrationForm(FlaskForm):
+    #construct username field with input and length validator
     username = StringField('username_label', validators=[InputRequired(message="Username required"), 
     Length(min=4, max=25, 
     message="Username must be between 4 and 25 characters!")])
 
+    #construct password field with input and length validator
     password = PasswordField('password_label', validators=[InputRequired(message="Password required"), 
     Length(min=4, max=25, 
     message="Password must be between 4 and 25 characters!")])
 
+    #construct confirmation field with input and equality validator
     confirm_password = PasswordField('confirm_password_label',
     validators=[InputRequired(message="Password required"), 
     EqualTo('password', message = "Passwords must match")])
 
+    #construct the submit field
     submit_button = SubmitField('Register') 
 
     def validate_username(self, username):
@@ -35,6 +39,7 @@ class RegistrationForm(FlaskForm):
             raise ValidationError("Someone has taken this username, be more original!")
 
 class LoginForm(FlaskForm):
+    #construct username, password and submit field
     username = StringField('username_label', validators=[InputRequired(message="Username required")])
     password = PasswordField('password_label', validators=[InputRequired(message="Password required"), invalid_credentials])
     submit_button = SubmitField('login')

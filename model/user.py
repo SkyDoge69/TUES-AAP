@@ -126,6 +126,7 @@ class User(UserMixin):
                      FROM user WHERE choice = ? ORDER BY ABS(? - rating) LIMIT 1""",
                     (choice, rating))
         user = result.fetchone()
+        print("cock")
         return User(*user)
 
     @staticmethod

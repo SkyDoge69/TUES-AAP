@@ -1,3 +1,9 @@
+body {
+    background-color: #333d42;
+    color: white;
+    font-family: sans-serif;
+}
+
 .container {
     width: 40%;
     margin: 30px auto;
@@ -72,18 +78,11 @@ h1 {
 #question {
     margin: 0 auto;
 }
-/* 
-#prev {
-    display: table;
-    margin: 0 auto;
-} */
 
 nav #prev {
-    height:200px; 
-    width:18%;
-    
-} 
-nav #prev {
     overflow:hidden; 
-    overflow-y:scroll;
+    /* overflow-y:scroll; */
+    text-align: center;
+    list-style: inside;
 }
+

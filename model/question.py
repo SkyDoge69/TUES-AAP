@@ -65,6 +65,7 @@ class Question(object):
     
     @staticmethod
     def all_questions():
+        #fetching all questions from the database
         with SQLite() as db:
             result = db.execute(
                     "SELECT content, answer, user, category FROM question").fetchall()                    

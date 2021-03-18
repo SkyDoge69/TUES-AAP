@@ -2,12 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
     var socket = io.connect('http://' + document.domain + ':' + location.port);  
 
     const username = document.querySelector('#get-username').innerHTML;
-    
-    console.log(localStorage.room_id)
-    console.log(localStorage.chat_id)
+    console.log(document.querySelector('#get-username').innerHTML);
+    // console.log(localStorage.room_id)
+    // console.log(localStorage.chat_id)
 
-    room = localStorage.chat_id;
-    joinRoom(room);
+    joinChat();
+
+    socket.on('joined', data => {
+        const room = data['chat_id'];
+    })
+   
     
     printSysMsg("Note: If you leave without leaving a rating, the user will be rated with 5 stars.");
 
@@ -57,21 +61,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('#fiveStar').onclick = () => {
         leaveRoom(room);
-        joinRoom(localStorage.room_id);
         socket.emit('rate', {'rating': 5, 'room': room});
         window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#fourStar').onclick = () => {
         leaveRoom(room);
-        joinRoom(localStorage.room_id);
         socket.emit('rate', {'rating': 4, 'room': room });
         window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#threeStar').onclick = () => {
         leaveRoom(room);
-        joinRoom(localStorage.room_id);
         socket.emit('rate', {'rating': 3, 'room': room });
         window.location.replace("http://127.0.0.1:5000/");
     }
@@ -85,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('#oneStar').onclick = () => {
         leaveRoom(room);
-        joinRoom(localStorage.room_id);
         socket.emit('rate', {'rating': 1, 'room': room });
         window.location.replace("http://127.0.0.1:5000/");
     }
@@ -103,13 +103,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector("#user_message").focus();
     }
 
-    // function joinChat(room) {
-    //     socket.emit('join_chat', {'username': username, 'room': room});
-    // }
-
-    function joinRoom(room) {
-        socket.emit('join', {'username': username, 'room': room});
+    function joinChat(room) {
+        socket.emit('join_chat', {'username': username});
     }
+
+
+    // function joinRoom(room) {
+    //     socket.emit('join', {'username': username, 'room': room});
+    // }
     
     function leaveRoom(room) {
         socket.emit('leave', {'username': username, 'room': room});
