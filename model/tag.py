@@ -49,7 +49,7 @@ class Tag(object):
                     (content,))
         tag = result.fetchone()
         if tag is None:
-            return "No such tag found"
+            return 0
         return Tag(*tag)
 
     @staticmethod

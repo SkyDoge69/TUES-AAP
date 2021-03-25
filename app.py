@@ -86,12 +86,12 @@ def join_chat(data):
     join_room(user.chat_id)
     emit("joined", {'chat_id': user.chat_id}, room=user.room_id)
 
-# @socketio.on('join')
-# def join(data):
-#     print("Someone joined a room!!!\n")
-#     print(data['room'])
-#     print(data['username'])
-#     join_room(data['room'])
+@socketio.on('join')
+def join(data):
+    print("Someone joined a room!!!\n")
+    print(data['room'])
+    print(data['username'])
+    join_room(data['room'])
 
 @socketio.on('leave')
 def leave(data):
@@ -149,6 +149,7 @@ def match(data):
     print("I am {}".format(current_user.name))
     emit('question_match', {'question': data['question'], 'user_id': current_user.id,
          'matched_user_id': matched_user.id, 'chat_id': chat_id}, room=matched_user.room_id)
+    
 
 
 def update_matched_users(chat_id, asking_name, answering_name):
@@ -190,13 +191,17 @@ def sort(data):
     questions = []
     for tag in data['tags']:
         #find the tag 
+        print("YOOYOYO")
+        print(tag)
         newTag = Tag.find_by_content(tag)
+        if newTag != 0:
         #add question that contains the tag to the list
-        questions.append(Question.find_by_tag(newTag.question_id))
+            questions.append(Question.find_by_tag(newTag.question_id))
     #emit to function that displays questions containing tag
+    if not questions:
+        print("NO")
     emit('sort', {'questions': questions})
         
-
 def send_message(content, username, room):
     current_time = strftime('%b-%d %I:%M%p', localtime())
     send({'msg': content, 'username': username, 'time_stamp': current_time}, room = room)

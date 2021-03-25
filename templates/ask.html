@@ -106,7 +106,7 @@
 
         input.focus();
 
-        localStorage.room_id = '{{ user.room_id }}';
+        // localStorage.room_id = '{{ user.room_id }}';
         $( document ).ready(function() {
         var socket = io.connect();
 
@@ -116,9 +116,10 @@
 
         socket.on('connect', data => {
             socket.emit('join', {'username': username, 'room': room_id});
+            console.log(room_id);
         });
 
-        
+
         socket.on('question_match', data => {
             //create a confirm box, that displays the question
             console.log("molq");

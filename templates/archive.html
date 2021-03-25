@@ -128,13 +128,14 @@
 
   input.focus();
 
-  document.querySelector('#sort').onclick = () => {
-      console.log(tags);
-      socket.emit('sort', {'tags': tags });
+  document.querySelector('#sort').onclick = () => { 
+    console.log(tags);
+    socket.emit('sort', {'tags': tags.values() });
   }
 
   socket.on('sort', data => {
-    console.log(data.questions);
+    console.log("here we are");
+    console.log("this is" + data.questions);
   });
 
     
