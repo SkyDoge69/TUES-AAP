@@ -106,7 +106,7 @@
 
         input.focus();
 
-        // localStorage.room_id = '{{ user.room_id }}';
+        localStorage.room_id = '{{ user.room_id }}';
         $( document ).ready(function() {
         var socket = io.connect();
 
@@ -126,6 +126,7 @@
             var answer = window.confirm("\"" + data.question + "\"" + "\nWould you like to answer that?");
             //if user wants to answer, redirect both users to a chat room
             if (answer) {
+                localStorage.chat_id = '{{ user.chat_id }}';
                 console.log(`You decided to answer this. ${data.room_id}`);
                 socket.emit('redirect_asker', data);
                 window.location.replace("http://127.0.0.1:5000/chat");

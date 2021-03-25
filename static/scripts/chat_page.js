@@ -6,13 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // console.log(localStorage.room_id)
     // console.log(localStorage.chat_id)
 
-    joinChat();
-
-    socket.on('joined', data => {
-        const room = data['chat_id'];
-    })
-   
     
+    let room = localStorage.chat_id;
+    joinRoom(room);
+   
+
     printSysMsg("Note: If you leave without leaving a rating, the user will be rated with 5 stars.");
 
     socket.on('message', data => {
@@ -108,9 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // function joinRoom(room) {
-    //     socket.emit('join', {'username': username, 'room': room});
-    // }
+    function joinRoom(room) {
+        socket.emit('join', {'username': username, 'room': room});
+    }
     
     function leaveRoom(room) {
         socket.emit('leave', {'username': username, 'room': room});
