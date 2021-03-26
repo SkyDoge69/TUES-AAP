@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // console.log(localStorage.room_id)
     // console.log(localStorage.chat_id)
 
-    
+
     let room = localStorage.chat_id;
     joinRoom(room);
    
@@ -59,33 +59,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('#fiveStar').onclick = () => {
         leaveRoom(room);
-        socket.emit('rate', {'rating': 5, 'room': room});
-        window.location.replace("http://127.0.0.1:5000/");
+        socket.emit('rate', {'rating': 5, 'name': username});
+        joinRoom(localStorage.room_id);
     }
 
     document.querySelector('#fourStar').onclick = () => {
         leaveRoom(room);
-        socket.emit('rate', {'rating': 4, 'room': room });
-        window.location.replace("http://127.0.0.1:5000/");
+        socket.emit('rate', {'rating': 4, 'name': username});
+        joinRoom(localStorage.room_id);
     }
 
     document.querySelector('#threeStar').onclick = () => {
         leaveRoom(room);
-        socket.emit('rate', {'rating': 3, 'room': room });
-        window.location.replace("http://127.0.0.1:5000/");
+        socket.emit('rate', {'rating': 3, 'name': username});
+        joinRoom(localStorage.room_id);
     }
 
     document.querySelector('#twoStar').onclick = () => {
         leaveRoom(room);
+        socket.emit('rate', {'rating': 2, 'name': username});
         joinRoom(localStorage.room_id);
-        socket.emit('rate', {'rating': 2, 'room': room });
-        window.location.replace("http://127.0.0.1:5000/");
     }
 
     document.querySelector('#oneStar').onclick = () => {
         leaveRoom(room);
-        socket.emit('rate', {'rating': 1, 'room': room });
-        window.location.replace("http://127.0.0.1:5000/");
+        socket.emit('rate', {'rating': 1, 'name': username});
+        joinRoom(localStorage.room_id);
     }
     
     function scrollDownChatWindow() {

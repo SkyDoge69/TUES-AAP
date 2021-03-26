@@ -99,7 +99,7 @@ def leave(data):
     print(data['room'])
     print(data['username'])
     leave_room(data['room'])
-    User.update_match("", str(data['username']))
+    # User.update_match("", str(data['username']))
 
 @app.route("/users", methods=["GET"])
 def list_users():
@@ -174,17 +174,19 @@ def on_redirect_asker(data):
 
 @socketio.on('rate')
 def rate(data):
-    #FIX FIX FIX FIX FIX IFX IFX
-    print("Rating, room is")
-    print(str(data['room']))
-    user = User.find_by_room_id("Chat")
-    print(user.name)
-    new_rating = (user.rating + int(data['rating']))/2
-    user.rating = new_rating
-    user.save()
-    print("znaeee6")
-    # emit('question_match', {'question': data['question'], 'user_id': current_user.id,
-    #                         'room_id': room_id}, room=chosenOne.room_id)
+    print("Rate function")
+    print(data['name'])
+    rating_user = User.find_by_name(str(data['name'])) #str?
+    rated_user = User.find_by_name(rating_user.match)
+    print("Rating user is " + rating_user.name)
+    print("Rated user is " + rated_user.name)
+
+    #update rating and save in db    
+    updated_rating = (rated_user.rating + int(data['rating']))/2
+    rated_user.update_rating(updated_rating)
+    print("Updated rating is " + str(updated_rating))
+    return redirect(url_for('home'))
+    
 
 @socketio.on('sort')
 def sort(data):
