@@ -184,6 +184,8 @@ def rate(data):
     #update rating and save in db    
     updated_rating = (rated_user.rating + int(data['rating']))/2
     rated_user.update_rating(updated_rating)
+    User.update_match("", rating_user.name)
+    User.update_chat_id("None", rating_user.name)
     print("Updated rating is " + str(updated_rating))
     return redirect(url_for('home'))
     
