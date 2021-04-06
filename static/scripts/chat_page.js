@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
    
 
     printSysMsg("Note: If you leave without leaving a rating, the user will be rated with 5 stars.");
+    printSysMsg(localStorage.question);
+    
 
     socket.on('message', data => {
         const p = document.createElement('p');

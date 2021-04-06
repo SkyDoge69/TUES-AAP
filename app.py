@@ -134,21 +134,24 @@ def message(data):
 @socketio.on('match')
 def match(data):
     matched_user = User.find_closest_rating(data['choice'], data['rating'])
-    # TODO: Filter me!
-    question = Question(data['question'], "", current_user.name, data['choice'])
-    question.save()
-    
-    # for value in data['tags']:
-    #     print(value)
-    #     new_tag = Tag(value, question.id)
-    #     new_tag.save()
-    
-    chat_id = str(uuid.uuid1())
-    print("NEW CHAT ID IS {}".format(chat_id))
-    print("You are {}".format(matched_user.name))
-    print("I am {}".format(current_user.name))
-    emit('question_match', {'question': data['question'], 'user_id': current_user.id,
-         'matched_user_id': matched_user.id, 'chat_id': chat_id}, room=matched_user.room_id)
+    if matched_user.is_authenticated:
+        print("He is online!")
+        question = Question(data['question'], "", current_user.name, data['choice'])
+        question.save()
+        
+        for value in data['tags']:
+            print(value)
+            new_tag = Tag(value, question.id)
+            new_tag.save()
+        
+        chat_id = str(uuid.uuid1())
+        print("NEW CHAT ID IS {}".format(chat_id))
+        print("You are {}".format(matched_user.name))
+        print("I am {}".format(current_user.name))
+        emit('question_match', {'question': data['question'], 'user_id': current_user.id,
+            'matched_user_id': matched_user.id, 'chat_id': chat_id}, room=matched_user.room_id)
+    else:
+        print("No luck today!")
     
 
 
