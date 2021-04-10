@@ -43,6 +43,16 @@ class Question(object):
         return Question(*question)
 
     @staticmethod
+    def find_most_recent_by_user(user):
+        result = None
+        with SQLite() as db:
+            result = db.execute(
+                    "SELECT content, answer, user, category, id FROM question WHERE user = ? ORDER  BY id DESC LIMIT 1",
+                    (user,))
+        question = result.fetchone()
+        return Question(*question)
+
+    @staticmethod
     def find_by_user(user):
         result = None
         with SQLite() as db:
@@ -63,6 +73,14 @@ class Question(object):
             return "No such tag"
         return Question(*question)
     
+    def update_answer_by_content(answer, content):
+        result = None
+        with SQLite() as db:
+            result = db.execute("UPDATE question SET answer = ? WHERE content = ?",
+                    (answer, content))
+        if result.rowcount == 0:
+            raise ApplicationError("No question present", 404)
+
     @staticmethod
     def all_questions():
         #fetching all questions from the database

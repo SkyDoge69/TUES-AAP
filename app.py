@@ -175,6 +175,13 @@ def on_redirect_asker(data):
     
     emit('redirect', {'question': data['question'], 'chat_id': data['chat_id']}, room = asking_user.room_id)
 
+@socketio.on('display_question')
+def display_question(data):
+    print("display")
+    user = User.find_by_name(str(data['username']))
+    question = Question.find_most_recent_by_user(user.match)
+    emit('display', {'question': question.content})
+
 @socketio.on('save_answer')
 def save_answer(data):
     print("save_answer")

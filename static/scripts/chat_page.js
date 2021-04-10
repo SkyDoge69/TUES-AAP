@@ -3,18 +3,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const username = document.querySelector('#get-username').innerHTML;
     console.log(document.querySelector('#get-username').innerHTML);
-    // console.log(localStorage.room_id)
-    // console.log(localStorage.chat_id)
+    
 
+    printSysMsg("Note: If you leave without leaving a rating, the user will be rated with 5 stars.");
+
+    //display question to both users
+    if (localStorage.type == "Answering") {
+        socket.emit("display_question", {'username': username})
+    } else {
+        printQuestionMsg(localStorage.question);
+    }
+
+    socket.on('display', data => {
+        printSysMsg("Your first response will be saved as the answer. Make it understandable. ")
+        printQuestionMsg(data.question);
+    });
 
     let room = localStorage.chat_id;
     let msg_count = 0;
     let type = localStorage.type;
+    console.log(type);
     joinRoom(room);
    
 
-    printSysMsg("Note: If you leave without leaving a rating, the user will be rated with 5 stars.");
-    printSysMsg(localStorage.question);
+    
     
 
     socket.on('message', data => {
@@ -44,12 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#display-message-section').append(p);
         scrollDownChatWindow();
         msg_count++;
-
-        if (msg_count == 1 && type == "Answering") {
-            socket.emit('save_answer', {'answer': data.msg, 'username': username});
+        console.log(localStorage.type);
+        if (msg_count == 1 && localStorage.type == "Answering") {
+            socket.emit('save_answer', {'answer': data.msg, 'username': username, 'type': localStorage.type});
             msg_count = 2;
         }
     });
+    
 
     socket.on('disconnect', function() {
         leaveRoom(room);
@@ -67,35 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#user_message').value = '';
     }
 
-    // document.querySelector('#fiveStar').onclick = () => {
-    //     leaveRoom(room);
-    //     socket.emit('rate', {'rating': 5, 'name': username});
-    //     joinRoom(localStorage.room_id);
-    // }
-
-    // document.querySelector('#fourStar').onclick = () => {
-    //     leaveRoom(room);
-    //     socket.emit('rate', {'rating': 4, 'name': username});
-    //     joinRoom(localStorage.room_id);
-    // }
-
-    // document.querySelector('#threeStar').onclick = () => {
-    //     leaveRoom(room);
-    //     socket.emit('rate', {'rating': 3, 'name': username});
-    //     joinRoom(localStorage.room_id);
-    // }
-
-    // document.querySelector('#twoStar').onclick = () => {
-    //     leaveRoom(room);
-    //     socket.emit('rate', {'rating': 2, 'name': username});
-    //     joinRoom(localStorage.room_id);
-    // }
-
-    // document.querySelector('#oneStar').onclick = () => {
-    //     leaveRoom(room);
-    //     socket.emit('rate', {'rating': 1, 'name': username});
-    //     joinRoom(localStorage.room_id);
-    // }
     
     function scrollDownChatWindow() {
         const chatWindow = document.querySelector("#display-message-section");
@@ -105,6 +89,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function printSysMsg(msg) {
         const p = document.createElement('p');
         p.setAttribute("class", "system-msg");
+        p.innerHTML = msg;
+        document.querySelector('#display-message-section').append(p);
+        document.querySelector("#user_message").focus();
+    }
+
+    function printQuestionMsg(msg) {
+        const p = document.createElement('p');
+        p.setAttribute("class", "question-msg");
         p.innerHTML = msg;
         document.querySelector('#display-message-section').append(p);
         document.querySelector("#user_message").focus();

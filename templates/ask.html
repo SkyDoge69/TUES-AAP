@@ -114,6 +114,8 @@
         var room_id = '{{ user.room_id }}';
         var rating = '{{ user.rating }}';
 
+        var question = "";
+
         socket.on('connect', data => {
             socket.emit('join', {'username': username, 'room': room_id});
             console.log(room_id);
@@ -121,23 +123,24 @@
 
 
         socket.on('question_match', data => {
-            //create a confirm box, that displays the question
-            console.log("molq");
             var answer = window.confirm("\"" + data.question + "\"" + "\nWould you like to answer that?");
-            //if user wants to answer, redirect both users to a chat room
+
             if (answer) {
+                localStorage.question = question;
                 localStorage.chat_id = '{{ user.chat_id }}';
-                console.log(`You decided to answer this. ${data.room_id}`);
+                localStorage.type = "Answering";
                 socket.emit('redirect_asker', data);
                 window.location.replace("http://127.0.0.1:5000/chat");
-            //if not, nothing happens
+                
             } else {
                 console.log('You dont want to.');
             }
         });
 
         socket.on('redirect', data => {
+            localStorage.question = question;
             localStorage.chat_id = '{{ user.chat_id }}';
+            localStorage.type = "Asker";
             window.location.replace("http://127.0.0.1:5000/chat");
         });
 
@@ -152,9 +155,8 @@
                 'question': document.querySelector('#question').value,
                 'tags': tags
             });
+            question = document.querySelector('#question').value;
             console.log(tags);
-            localStorage.question = document.querySelector('#question').value;
-            document.querySelector('#question').value = ''; 
         }
     }
 
@@ -165,11 +167,11 @@
             socket.emit('match', {
                 'choice': "Photography",
                 'rating': rating,
-                'question': document.querySelector('#question').value
+                'question': document.querySelector('#question').value,
+                'tags': tags
             });
+            question = document.querySelector('#question').value;
             console.log(tags);
-            localStorage.question = document.querySelector('#question').value;
-            document.querySelector('#question').value = ''; 
         }
     }
 
@@ -180,11 +182,11 @@
             socket.emit('match', {
                 'choice': "Model",
                 'rating': rating,
-                'question': document.querySelector('#question').value
+                'question': document.querySelector('#question').value,
+                'tags': tags
             });
+            question = document.querySelector('#question').value;
             console.log(tags);
-            localStorage.question = document.querySelector('#question').value;
-            document.querySelector('#question').value = ''; 
         }
     }
 
@@ -193,5 +195,4 @@
     console.log(room_id);
       });
     </script>
-    <!-- <script src="{{ url_for('static', filename='scripts/chat_page.js') }}"></script> -->
 {% endblock %}
