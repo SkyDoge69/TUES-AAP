@@ -194,41 +194,33 @@ input[type=text]:focus{
     display: none !important;
 }
 
-.dropbtn {
-    background-color: #3498DB;
-    color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-  }
-  
-.dropbtn:hover, .dropbtn:focus {
-    background-color: #2980B9;
+.box select {
+  margin-top: 0.6em;
+  background-color: #3498DB;
+  color: white;
+  border: 0.5px solid #0563af;
+  font-size: 1.2em;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  appearance: none;
+  outline: none;
 }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
+.box::before {
+  font-family: FontAwesome;
+  position: absolute;
+  text-align: center;
+  font-size: 2em;
+  line-height: 5px;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
 }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    overflow: auto;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+.box:hover::before {
+  color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
-.dropdown-content p {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
+.box select option {
+  padding: 10px;
 }
-
-.dropdown p:hover {background-color: #ddd;}
-
-.show {display: block;}

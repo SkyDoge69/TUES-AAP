@@ -18,7 +18,7 @@
             <div class="container-fluid">
                 <div id="show-sidebar-button" class="cursor-pointer">
                     <i class="fas fa-plus-circle "></i>
-                    <span>Rooms</span>
+                    <span>AAP</span>
                 </div>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,14 +28,16 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
                             <form method="POST" action="/rate/{{ user.match }}">
-                                <select class="form-select" aria-label="Default select example" id="rating_select" name="rating">
-                                    <option selected>Rate and quit</option>
-                                        <option id="fiveStar" value="5">☆ ☆ ☆ ☆ ☆</a>
-                                        <option id="fourStar" value="4"> ☆ ☆ ☆ ☆</a>
-                                        <option id="threeStar" value="3"> ☆ ☆ ☆</a>
-                                        <option id="twoStar" value="2"> ☆ ☆</a>
-                                        <option id="oneStar" value="1"> ☆</a>
-                                </select>
+                                <div class="box">
+                                    <select class="form-select" aria-label="Default select example" id="rating_select" name="rating">
+                                        <option selected>Rate and quit</option>
+                                            <option id="fiveStar" value="5">☆ ☆ ☆ ☆ ☆</a>
+                                            <option id="fourStar" value="4"> ☆ ☆ ☆ ☆</a>
+                                            <option id="threeStar" value="3"> ☆ ☆ ☆</a>
+                                            <option id="twoStar" value="2"> ☆ ☆</a>
+                                            <option id="oneStar" value="1"> ☆</a>
+                                    </select>
+                                </div>
                             </form>
                         </li>
                     </ul>
