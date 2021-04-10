@@ -175,23 +175,30 @@ def on_redirect_asker(data):
     
     emit('redirect', {'question': data['question'], 'chat_id': data['chat_id']}, room = asking_user.room_id)
 
-@socketio.on('rate')
-def rate(data):
-    print("Rate function")
-    print(data['name'])
-    rating_user = User.find_by_name(str(data['name'])) #str?
-    rated_user = User.find_by_name(rating_user.match)
+@socketio.on('save_answer')
+def save_answer(data):
+    print("save_answer")
+    user = User.find_by_name(str(data['username']))
+    question = Question.find_most_recent_by_user(user.match)
+    print(question.content)
+    Question.update_answer_by_content(str(data['answer']), question.content)
+
+@login_required
+@app.route('/rate/<username>', methods=["POST"] )
+def rate(username):
+    rating_user = current_user
+    rated_user = User.find_by_name(username)
     print("Rating user is " + rating_user.name)
     print("Rated user is " + rated_user.name)
 
     #update rating and save in db    
-    updated_rating = (rated_user.rating + int(data['rating']))/2
+    updated_rating = (rated_user.rating + int(request.form["rating"]))/2
     rated_user.update_rating(updated_rating)
     User.update_match("", rating_user.name)
     User.update_chat_id("None", rating_user.name)
     print("Updated rating is " + str(updated_rating))
     return redirect(url_for('home'))
-    
+
 
 @socketio.on('sort')
 def sort(data):

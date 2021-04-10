@@ -27,16 +27,16 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <div class="dropdown">
-                                <button onclick="dropDown()" class="dropbtn">Rate and quit</button>
-                                <div id="myDropdown" class="dropdown-content">
-                                  <p id="fiveStar">☆ ☆ ☆ ☆ ☆</a>
-                                  <p id="fourStar"> ☆ ☆ ☆ ☆</a>
-                                  <p id="threeStar"> ☆ ☆ ☆</a>
-                                  <p id="twoStar"> ☆ ☆</a>
-                                  <p id="oneStar"> ☆</a>
-                                </div>
-                              </div>
+                            <form method="POST" action="/rate/{{ user.match }}">
+                                <select class="form-select" aria-label="Default select example" id="rating_select" name="rating">
+                                    <option selected>Rate and quit</option>
+                                        <option id="fiveStar" value="5">☆ ☆ ☆ ☆ ☆</a>
+                                        <option id="fourStar" value="4"> ☆ ☆ ☆ ☆</a>
+                                        <option id="threeStar" value="3"> ☆ ☆ ☆</a>
+                                        <option id="twoStar" value="2"> ☆ ☆</a>
+                                        <option id="oneStar" value="1"> ☆</a>
+                                </select>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -60,37 +60,25 @@
 <span id="get-username">{{ user.name }}</span>
 <span id="get-room-id">{{ user.room_id }}</span> 
 <!-- get original room_id -->
+
+<script src="{{url_for('static', filename='scripts/functionality.js')}}"></script>
+<script src="{{ url_for('static', filename='scripts/chat_page.js') }}"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<!-- Font Awesome JS -->
+<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
 <script>
-     function dropDown() {
-        document.getElementById("myDropdown").classList.toggle("show");
-    }
-
-          // Close the dropdown if the user clicks outside of it
-          window.onclick = function(event) {
-            if (!event.target.matches('.dropbtn')) {
-              var dropdowns = document.getElementsByClassName("dropdown-content");
-              var i;
-              for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                  openDropdown.classList.remove('show');
-                }
-              }
-            }
-          }
-
+      $(document).ready(function() {
+            $('#rating_select').on('change', function() {
+                this.form.submit();
+            });
+        });
 </script>
-
-    <script src="{{url_for('static', filename='scripts/functionality.js')}}"></script>
-    <script src="{{ url_for('static', filename='scripts/chat_page.js') }}"></script>
-    
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
-    <!-- Font Awesome JS -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 
 </body>
 </html>

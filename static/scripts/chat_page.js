@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     let room = localStorage.chat_id;
+    let msg_count = 0;
+    let type = localStorage.type;
     joinRoom(room);
    
 
@@ -41,6 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
         p.innerHTML += span_username.outerHTML + br.outerHTML + data.msg + br.outerHTML + span_timestamp.outerHTML;
         document.querySelector('#display-message-section').append(p);
         scrollDownChatWindow();
+        msg_count++;
+
+        if (msg_count == 1 && type == "Answering") {
+            socket.emit('save_answer', {'answer': data.msg, 'username': username});
+            msg_count = 2;
+        }
     });
 
     socket.on('disconnect', function() {
@@ -59,35 +67,35 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#user_message').value = '';
     }
 
-    document.querySelector('#fiveStar').onclick = () => {
-        leaveRoom(room);
-        socket.emit('rate', {'rating': 5, 'name': username});
-        joinRoom(localStorage.room_id);
-    }
+    // document.querySelector('#fiveStar').onclick = () => {
+    //     leaveRoom(room);
+    //     socket.emit('rate', {'rating': 5, 'name': username});
+    //     joinRoom(localStorage.room_id);
+    // }
 
-    document.querySelector('#fourStar').onclick = () => {
-        leaveRoom(room);
-        socket.emit('rate', {'rating': 4, 'name': username});
-        joinRoom(localStorage.room_id);
-    }
+    // document.querySelector('#fourStar').onclick = () => {
+    //     leaveRoom(room);
+    //     socket.emit('rate', {'rating': 4, 'name': username});
+    //     joinRoom(localStorage.room_id);
+    // }
 
-    document.querySelector('#threeStar').onclick = () => {
-        leaveRoom(room);
-        socket.emit('rate', {'rating': 3, 'name': username});
-        joinRoom(localStorage.room_id);
-    }
+    // document.querySelector('#threeStar').onclick = () => {
+    //     leaveRoom(room);
+    //     socket.emit('rate', {'rating': 3, 'name': username});
+    //     joinRoom(localStorage.room_id);
+    // }
 
-    document.querySelector('#twoStar').onclick = () => {
-        leaveRoom(room);
-        socket.emit('rate', {'rating': 2, 'name': username});
-        joinRoom(localStorage.room_id);
-    }
+    // document.querySelector('#twoStar').onclick = () => {
+    //     leaveRoom(room);
+    //     socket.emit('rate', {'rating': 2, 'name': username});
+    //     joinRoom(localStorage.room_id);
+    // }
 
-    document.querySelector('#oneStar').onclick = () => {
-        leaveRoom(room);
-        socket.emit('rate', {'rating': 1, 'name': username});
-        joinRoom(localStorage.room_id);
-    }
+    // document.querySelector('#oneStar').onclick = () => {
+    //     leaveRoom(room);
+    //     socket.emit('rate', {'rating': 1, 'name': username});
+    //     joinRoom(localStorage.room_id);
+    // }
     
     function scrollDownChatWindow() {
         const chatWindow = document.querySelector("#display-message-section");
@@ -102,10 +110,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector("#user_message").focus();
     }
 
-    function joinChat(room) {
-        socket.emit('join_chat', {'username': username});
-    }
-
+    // function saveAnswer(msg_count, type, msg, question) {
+    //     if (msg_count == 1 && type == "Answering") {
+    //         socket.emit('save_answer', {'answer': msg, 'question': question});
+    //         msg_count = 2;
+    //     }
+    // }
 
     function joinRoom(room) {
         socket.emit('join', {'username': username, 'room': room});
@@ -114,5 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function leaveRoom(room) {
         socket.emit('leave', {'username': username, 'room': room});
     }
+
 
 });
