@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let room = localStorage.chat_id;
     let msg_count = 0;
     let type = localStorage.type;
-    console.log(type);
     joinRoom(room);
    
 
@@ -57,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollDownChatWindow();
         msg_count++;
         console.log(localStorage.type);
+    
         if (msg_count == 1 && localStorage.type == "Answering") {
             socket.emit('save_answer', {'answer': data.msg, 'username': username, 'type': localStorage.type});
             msg_count = 2;
