@@ -36,13 +36,22 @@ conn.cursor().execute('''
 CREATE TABLE IF NOT EXISTS tag
     (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        content TEXT NOT NULL,
-        question_id INTEGER,
-        FOREIGN KEY(question_id) REFERENCES question(id)
+        content TEXT NOT NULL
     )
 ''')
 conn.commit()
 
+conn.cursor().execute('''
+CREATE TABLE IF NOT EXISTS question_tag
+    (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        question_id INTEGER,
+        tag_id INTEGER,
+        FOREIGN KEY(question_id) REFERENCES question(id),
+        FOREIGN KEY(tag_id) REFERENCES tag(id)
+    )
+''')
+conn.commit()
 
 class SQLite(object):
 

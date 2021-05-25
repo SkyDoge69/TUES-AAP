@@ -49,22 +49,41 @@
     color: #333;
     flex: 1;
 }
-    </style>
+
+h2 {
+    text-align: center;
+    margin-top: 0.7em;
+}
+
+h4 {
+    text-align: center;
+}
+
+#filter {
+    margin: 0 auto;
+    display: block;
+}
+
+ul {
+    text-align: center;
+}
+
+</style>
 {% endblock %}
 
 {% block content %}
   <br><br>
   <h2>Questions archive</h2>
   <div class="container">
-    <br />
-    <br />
+      <h4>Input your tags<br> to sort easily</h4>
     <div class="tag-container">
         <input/>  
     </div>        
   </div>
-  <button type="button" class="btn btn-danger" id="sort">Sort by tags</button>
-  <div class="all-questions">
-    <ul>
+  <button type="button" class="btn btn-danger" id="filter">Filter by tags</button>
+  <hr>
+  <div>
+    <ul id="all-questions">
       {% for question in questions %}
       <li class="select-question">{{ question }}</li>
       {% endfor %}
@@ -128,14 +147,21 @@
 
   input.focus();
 
-  document.querySelector('#sort').onclick = () => { 
+  document.querySelector('#filter').onclick = () => { 
     console.log(tags);
-    socket.emit('sort', {'tags': tags.values() });
+    console.log(tags.values());
+    socket.emit('filter', {'tags': tags });
   }
 
-  socket.on('sort', data => {
-    console.log("here we are");
-    console.log("this is" + data.questions);
+  socket.on('filter_result', data => {
+      console.log("ivan");
+    console.log(data);
+    console.log("petkan");
+    $('#all-questions').empty();
+    data['result'].forEach(element => {
+        console.log(element);
+        $("<li></li>").text(element.content + " | " +  element.answer + " | " + element.user + " | " + element.category).appendTo("#all-questions");
+    });
   });
 
     

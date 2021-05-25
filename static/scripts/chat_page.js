@@ -20,13 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     let room = localStorage.chat_id;
-    let msg_count = 0;
-    let type = localStorage.type;
+    localStorage.msg_count = 0;
     joinRoom(room);
-   
-
-    
-    
+  
 
     socket.on('message', data => {
         const p = document.createElement('p');
@@ -54,12 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
         p.innerHTML += span_username.outerHTML + br.outerHTML + data.msg + br.outerHTML + span_timestamp.outerHTML;
         document.querySelector('#display-message-section').append(p);
         scrollDownChatWindow();
-        msg_count++;
-        console.log(localStorage.type);
-    
-        if (msg_count == 1 && localStorage.type == "Answering") {
+        localStorage.msg_count = localStorage.msg_count + 1;
+
+        //save the first response of the answering user as the answer
+        if (localStorage.msg_count == 1 && localStorage.type == "Answering") {
+            console.log("here")
             socket.emit('save_answer', {'answer': data.msg, 'username': username, 'type': localStorage.type});
-            msg_count = 2;
+            localStorage.msg_count = 2;
         }
     });
     
@@ -102,12 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector("#user_message").focus();
     }
 
-    // function saveAnswer(msg_count, type, msg, question) {
-    //     if (msg_count == 1 && type == "Answering") {
-    //         socket.emit('save_answer', {'answer': msg, 'question': question});
-    //         msg_count = 2;
-    //     }
-    // }
 
     function joinRoom(room) {
         socket.emit('join', {'username': username, 'room': room});

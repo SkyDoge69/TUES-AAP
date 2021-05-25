@@ -62,16 +62,16 @@ class Question(object):
         return [' | '.join(name) for name in result]
 
     @staticmethod
-    def find_by_tag(question_id):
+    def find_by_tag(tag_id):
         result = None
         with SQLite() as db:
             result = db.execute(
                     "SELECT content, answer, user, category, id FROM question WHERE id = ?",
-                    (question_id,))
-        question = result.fetchone()
+                    (tag_id,))
+        question = result.fetchall()
         if question is None:
-            return "No such tag"
-        return Question(*question)
+            return None
+        return [Question(*row) for row in question]
     
     def update_answer_by_content(answer, content):
         result = None

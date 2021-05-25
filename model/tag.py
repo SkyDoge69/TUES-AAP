@@ -3,10 +3,9 @@ from errors import ApplicationError
 
 class Tag(object):
  
-    def __init__(self, content, question_id, tag_id=None):
+    def __init__(self, content, tag_id=None):
         self.id = tag_id
         self.content = content
-        self.question_id = question_id
  
     def to_dict(self):
         tag_data = self.__dict__
@@ -32,7 +31,7 @@ class Tag(object):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT content, question_id, id FROM tag WHERE id = ?",
+                    "SELECT content, id FROM tag WHERE id = ?",
                     (tag_id,))
         tag = result.fetchone()
         if tag is None:
@@ -45,45 +44,46 @@ class Tag(object):
         result = None
         with SQLite() as db:
             result = db.execute(
-                    "SELECT content, question_id, id FROM tag WHERE content = ?",
+                    "SELECT content, id FROM tag WHERE content = ?",
                     (content,))
         tag = result.fetchone()
         if tag is None:
             return 0
         return Tag(*tag)
 
-    @staticmethod
-    def find_by_question(question_id):
-        result = None
-        with SQLite() as db:
-            result = db.execute(
-                    "SELECT content, question_id, id FROM tag WHERE question_id = ?",
-                    (question_id,))
-        tag = result.fetchone()
-        if tag is None:
-            return None
-        return Tag(*tag)
+    # @staticmethod
+    # def find_by_question(question_id):
+    #     result = None
+    #     with SQLite() as db:
+    #         result = db.execute(
+    #                 "SELECT content, question_id, id FROM tag WHERE question_id = ?",
+    #                 (question_id,))
+    #     tag = result.fetchone()
+    #     if tag is None:
+    #         return None
+    #     return Tag(*tag)
     
     @staticmethod
     def all_tags():
         with SQLite() as db:
             result = db.execute(
-                    "SELECT content, question_id, id FROM tag").fetchall()                    
+                    "SELECT content, id FROM tag").fetchall()                    
             return [' | '.join(name) for name in result]
  
     @staticmethod
     def all():
         with SQLite() as db:
             result = db.execute(
-                    "SELECT content, question_id, id FROM tag").fetchall()
+                    "SELECT content, id FROM tag").fetchall()
             return [Tag(*row) for row in result]
  
     def __get_save_query(self):
-        query = "{} INTO tag {} VALUES {}"
         if self.id == None:
-            args = (self.content, self.question_id)
-            query = query.format("INSERT", "(content, question_id)", args)
+            print("None")
+            query = "INSERT INTO tag(content) VALUES('{}')".format(self.content)
+            print(query)
         else:
-            args = (self.id, self.content, self.question_id)
-            query = query.format("REPLACE", "(id, content, question_id)", args)
+            print("Done")
+            query = "UPDATE tag SET content='{}'".format(self.content)
+            print(query)
         return query

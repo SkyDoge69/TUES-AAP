@@ -9,6 +9,7 @@ from login import login_manager
 from model.user import User
 from model.question import Question
 from model.tag import Tag
+from model.question_tag import Question_tag
 import uuid
 
 app = Flask(__name__)
@@ -99,7 +100,6 @@ def leave(data):
     print(data['room'])
     print(data['username'])
     leave_room(data['room'])
-    # User.update_match("", str(data['username']))
 
 @app.route("/users", methods=["GET"])
 def list_users():
@@ -122,6 +122,14 @@ def list_tags():
         result.append(tag.to_dict())
     return jsonify(result), 201
 
+@app.route("/qt", methods=["GET"])
+def list_question_tags():
+    result = []
+    for question_tag in Question_tag.all():
+        result.append(question_tag.to_dict())
+    return jsonify(result), 201
+
+@login_required
 @app.route("/archive", methods=["GET"])
 def archive():
     return render_template("archive.html", questions = Question.all_questions())
@@ -136,13 +144,16 @@ def match(data):
     matched_user = User.find_closest_rating(data['choice'], data['rating'])
     if matched_user.is_authenticated:
         print("He is online!")
-        question = Question(data['question'], "", current_user.name, data['choice'])
-        question.save()
+        new_question = Question(data['question'], "", current_user.name, data['choice'])
+        new_question.save()
         
         for value in data['tags']:
-            print(value)
-            new_tag = Tag(value, question.id)
-            new_tag.save()
+            if value is not None:
+                print(value)
+                new_tag = Tag(value)
+                new_tag.save()
+                new_question_tag = Question_tag(new_question.id, new_tag.id)
+                new_question_tag.save()
         
         chat_id = str(uuid.uuid1())
         print("NEW CHAT ID IS {}".format(chat_id))
@@ -151,6 +162,7 @@ def match(data):
         emit('question_match', {'question': data['question'], 'user_id': current_user.id,
             'matched_user_id': matched_user.id, 'chat_id': chat_id}, room=matched_user.room_id)
     else:
+        flash('No matches available. Try again!')
         print("No luck today!")
     
 
@@ -204,24 +216,26 @@ def rate(username):
     User.update_match("", rating_user.name)
     User.update_chat_id("None", rating_user.name)
     print("Updated rating is " + str(updated_rating))
-    return redirect(url_for('home'))
+    return redirect(url_for('ask'))
 
 
-@socketio.on('sort')
-def sort(data):
-    questions = []
-    for tag in data['tags']:
-        #find the tag 
-        print("YOOYOYO")
-        print(tag)
-        newTag = Tag.find_by_content(tag)
-        if newTag != 0:
-        #add question that contains the tag to the list
-            questions.append(Question.find_by_tag(newTag.question_id))
-    #emit to function that displays questions containing tag
-    if not questions:
-        print("NO")
-    emit('sort', {'questions': questions})
+@socketio.on('filter')
+def filter(data):
+    print(data)
+    # for tag in data['tags']:
+    #     #find the tag 
+    #     print("YOOYOYO")
+    #     print(tag)
+    #     existing_tag = Tag.find_by_content(tag)
+    #     question_tag = Question_tag.find_by_tag_id(existing_tag.id)
+    #     if existing_tag != 0:
+    #     #add question that contains the tag to the list
+    #         questions = Question_tag.search_by_tags()
+    #         for q in question:
+    print(data['tags'])
+    questions = Question_tag.search_by_tags(data['tags'])
+    r = [q.to_dict() for q in questions]
+    emit('filter_result', {'result': r})
         
 def send_message(content, username, room):
     current_time = strftime('%b-%d %I:%M%p', localtime())
