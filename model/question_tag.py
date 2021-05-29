@@ -75,7 +75,6 @@ class Question_tag(object):
             questions = result.fetchall()
             if questions is None:
                 return []
-            [print(q) for q in questions]
             return [Question(*q) for q in questions]
 
     #t.content IN (work, lady)

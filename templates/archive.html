@@ -68,6 +68,14 @@ ul {
     text-align: center;
 }
 
+#main-li {
+    font-size: 1.5em;
+    list-style-type: none;
+}
+
+.select-question {
+    font-size: 1.3em;
+}
 </style>
 {% endblock %}
 
@@ -84,6 +92,8 @@ ul {
   <hr>
   <div>
     <ul id="all-questions">
+        <li id = "main-li">"Question" | !Answer! | (Username of creator) | ^Category^</li>
+        <hr>
       {% for question in questions %}
       <li class="select-question">{{ question }}</li>
       {% endfor %}

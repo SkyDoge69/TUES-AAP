@@ -124,15 +124,15 @@ class User(UserMixin):
         return User(*user)
 
     @staticmethod
-    def find_closest_rating(choice, rating):
+    def find_closest_rating(choice, rating, username):
         print(choice)
         print(rating)
         result = None
         with SQLite() as db:
             result = db.execute(
                     """SELECT name, password, choice, rating, room_id, chat_id, match, id
-                     FROM user WHERE choice = ? ORDER BY ABS(? - rating) LIMIT 1""",
-                    (choice, rating))
+                     FROM user WHERE choice = ? AND name <>? ORDER BY ABS(? - rating) LIMIT 1""",
+                    (choice, username, rating))
         user = result.fetchone()
         print("cock")
         return User(*user)

@@ -141,7 +141,7 @@ def message(data):
 
 @socketio.on('match')
 def match(data):
-    matched_user = User.find_closest_rating(data['choice'], data['rating'])
+    matched_user = User.find_closest_rating(data['choice'], data['rating'], data['username'])
     if matched_user.is_authenticated:
         print("He is online!")
         new_question = Question(data['question'], "", current_user.name, data['choice'])
@@ -222,20 +222,10 @@ def rate(username):
 @socketio.on('filter')
 def filter(data):
     print(data)
-    # for tag in data['tags']:
-    #     #find the tag 
-    #     print("YOOYOYO")
-    #     print(tag)
-    #     existing_tag = Tag.find_by_content(tag)
-    #     question_tag = Question_tag.find_by_tag_id(existing_tag.id)
-    #     if existing_tag != 0:
-    #     #add question that contains the tag to the list
-    #         questions = Question_tag.search_by_tags()
-    #         for q in question:
     print(data['tags'])
     questions = Question_tag.search_by_tags(data['tags'])
-    r = [q.to_dict() for q in questions]
-    emit('filter_result', {'result': r})
+    result = [q.to_dict() for q in questions]
+    emit('filter_result', {'result': result})
         
 def send_message(content, username, room):
     current_time = strftime('%b-%d %I:%M%p', localtime())
